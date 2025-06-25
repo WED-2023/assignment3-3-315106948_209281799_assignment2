@@ -2,21 +2,46 @@
   <div class="container mt-4" style="max-width: 500px;">
     <h2 class="mb-4">Register</h2>
     <b-form @submit.prevent="register">
-      <!-- Username -->
-      <b-form-group label="Username" label-for="username">
+      <!-- Usermame -->
+      <b-form-group label="Usermame" label-for="username">
         <b-form-input
           id="username"
           v-model="state.username"
           @blur="v$.username.$touch()"
         />
         <b-form-invalid-feedback v-if="v$.username.$error">
-          <div v-if="!v$.username.required">Username is required.</div>
+          <div v-if="!v$.username.required">Usermame is required.</div>
           <div v-else-if="!v$.username.minLength || !v$.username.maxLength">
-            Username must be 3–8 characters.
+            Usermame must be 3–8 characters.
           </div>
-          <div v-else-if="!v$.username.alpha">Username must contain only letters.</div>
+          <div v-else-if="!v$.username.alpha">Usermame must contain only letters.</div>
         </b-form-invalid-feedback>
       </b-form-group>
+
+      <!--First Name-->
+      <b-form-group label="Firstmame" label-for="firstname">
+        <b-form-input
+          id="firstname"
+          v-model="state.firstname"
+          @blur="v$.firstname.$touch()"
+        />
+        <b-form-invalid-feedback v-if="v$.firstname.$error">
+          <div v-if="!v$.firstname.required">Firstmame is required.</div>
+        </b-form-invalid-feedback>
+      </b-form-group>
+
+      <!--Last Name-->
+      <b-form-group label="Lastmame" label-for="lastname">
+        <b-form-input
+          id="lastname"
+          v-model="state.lastname"
+          @blur="v$.lastname.$touch()"
+        />
+        <b-form-invalid-feedback v-if="v$.lastname.$error">
+          <div v-if="!v$.lastname.required">Lastname is required.</div>
+        </b-form-invalid-feedback>
+      </b-form-group>
+
 
       <!-- Country -->
       <b-form-group label="Country" label-for="country">
@@ -63,6 +88,21 @@
         </b-form-invalid-feedback>
       </b-form-group>
 
+
+      <!--Email-->
+      <b-form-group label="Email" label-for="email">
+        <b-form-input
+          id="email"
+          v-model="state.email"
+          @blur="v$.email.$touch()"
+        />
+        <b-form-invalid-feedback v-if="v$.email.$error">
+          <div v-if="!v$.email.required">Email is required.</div>
+        </b-form-invalid-feedback>
+      </b-form-group>
+
+      
+
       <b-button type="submit" variant="success" class="w-100">Register</b-button>
 
       <b-alert
@@ -84,21 +124,31 @@
 </template>
 
 <script>
-import { reactive } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required, minLength, maxLength, alpha, sameAs } from '@vuelidate/validators';
 import rawCountries from '../assets/countries';
+import { computed, reactive } from 'vue';
+
+
 
 export default {
   name: 'RegisterPage',
   setup() {
+    // const internalInstance = getCurrentInstance();
+    // const store = internalInstance.appContext.config.globalProperties.store;
+
     const state = reactive({
       username: '',
+      firstname: '',
+      lastname: '',
       password: '',
       confirmedPassword: '',
       country: '',
       submitError: null,
+      email: '',
     });
+
+    const passwordRef = computed(() => state.password);
 
     const rules = {
       username: {
@@ -106,6 +156,12 @@ export default {
         minLength: minLength(3),
         maxLength: maxLength(8),
         alpha,
+      },
+      firstname: {
+        required,
+      },
+      lastname: {
+        required,
       },
       country: { required },
       password: {
@@ -115,25 +171,57 @@ export default {
       },
       confirmedPassword: {
         required,
-        sameAsPassword: sameAs(() => state.password),
+      sameAsPassword: sameAs(passwordRef),
+      },
+      email: {
+        required,
       },
     };
 
     const v$ = useVuelidate(rules, state);
 
     const register = async () => {
+      console.log("register called");
+      console.log('password:', state.password);
+      console.log('confirmedPassword:', state.confirmedPassword);
+      console.log('same?', state.password === state.confirmedPassword);
       const valid = await v$.value.$validate();
-      if (!valid) return;
+      console.log("validation result:", valid);
+      // console.log("v$:", v$.value);
+      if (!valid) {
+        console.log("Validation failed. Fields with errors:");
+        // for (const [key, field] of Object.entries(v$.value)) {
+        //   //print to console the field name and its value 
+
+        //   if (field?.$error) {
+        //     const value = field.$model !== undefined ? field.$model : '(no model)';
+        //     console.warn(`❌ ${key} failed validation. Value: ${value}`);
+        //   }
+        // }
+      return;
+      }
 
       try {
-        await window.axios.post('/register', {
+        console.log("Sending registration request with data:", {
           username: state.username,
+          firstname: state.firstname,
+          lastname: state.lastname,
           password: state.password,
           country: state.country,
+          email: state.email,
+        });
+        await window.axios.post(`/Register`,{
+          username: state.username,
+          firstname: state.firstname,
+          lastname: state.lastname,
+          password: state.password,
+          country: state.country,
+          email: state.email,
         });
         window.toast('Registration successful', 'You can now login', 'success');
         window.router.push('/login');
       } catch (err) {
+        console.error('Registration failed:', err);
         state.submitError = err.response?.data?.message || 'Unexpected error.';
       }
     };

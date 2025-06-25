@@ -3,15 +3,15 @@
   <div class="container mt-4" style="max-width: 400px;">
     <h2 class="mb-4">Login</h2>
     <b-form @submit.prevent="login">
-      <!-- Username -->
-      <b-form-group label="Username" label-for="username">
+      <!-- Usermame -->
+      <b-form-group label="Usermame" label-for="username">
         <b-form-input
           id="username"
           v-model="state.username"
           :state="getValidationState(v$.username)"
         />
         <b-form-invalid-feedback v-if="v$.username.$error">
-          Username is required.
+          Usermame is required.
         </b-form-invalid-feedback>
       </b-form-group>
 
