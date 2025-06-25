@@ -2,46 +2,44 @@
   <div class="container mt-4" style="max-width: 500px;">
     <h2 class="mb-4">Register</h2>
     <b-form @submit.prevent="register">
-      <!-- Usermame -->
-      <b-form-group label="Usermame" label-for="username">
+      <!-- Username -->
+      <b-form-group label="Username" label-for="username">
         <b-form-input
           id="username"
           v-model="state.username"
           @blur="v$.username.$touch()"
+          :state="getValidationState(v$.username)"
         />
-        <b-form-invalid-feedback v-if="v$.username.$error">
-          <div v-if="!v$.username.required">Usermame is required.</div>
-          <div v-else-if="!v$.username.minLength || !v$.username.maxLength">
-            Usermame must be 3–8 characters.
-          </div>
-          <div v-else-if="!v$.username.alpha">Usermame must contain only letters.</div>
+        <b-form-invalid-feedback v-if="v$.username.$dirty && v$.username.$invalid">
+          {{ errorMessageForUsername }}
         </b-form-invalid-feedback>
       </b-form-group>
 
-      <!--First Name-->
-      <b-form-group label="Firstmame" label-for="firstname">
+      <!-- First Name -->
+      <b-form-group label="First Name" label-for="firstname">
         <b-form-input
           id="firstname"
           v-model="state.firstname"
           @blur="v$.firstname.$touch()"
+          :state="getValidationState(v$.firstname)"
         />
-        <b-form-invalid-feedback v-if="v$.firstname.$error">
-          <div v-if="!v$.firstname.required">Firstmame is required.</div>
+        <b-form-invalid-feedback v-if="v$.firstname.$dirty && v$.firstname.$invalid">
+          First Name is required.
         </b-form-invalid-feedback>
       </b-form-group>
 
-      <!--Last Name-->
-      <b-form-group label="Lastmame" label-for="lastname">
+      <!-- Last Name -->
+      <b-form-group label="Last Name" label-for="lastname">
         <b-form-input
           id="lastname"
           v-model="state.lastname"
           @blur="v$.lastname.$touch()"
+          :state="getValidationState(v$.lastname)"
         />
-        <b-form-invalid-feedback v-if="v$.lastname.$error">
-          <div v-if="!v$.lastname.required">Lastname is required.</div>
+        <b-form-invalid-feedback v-if="v$.lastname.$dirty && v$.lastname.$invalid">
+          Last Name is required.
         </b-form-invalid-feedback>
       </b-form-group>
-
 
       <!-- Country -->
       <b-form-group label="Country" label-for="country">
@@ -50,8 +48,9 @@
           v-model="state.country"
           :options="countries"
           @change="v$.country.$touch()"
+          :state="getValidationState(v$.country)"
         />
-        <b-form-invalid-feedback v-if="v$.country.$error">
+        <b-form-invalid-feedback v-if="v$.country.$dirty && v$.country.$invalid">
           Country is required.
         </b-form-invalid-feedback>
       </b-form-group>
@@ -63,12 +62,10 @@
           type="password"
           v-model="state.password"
           @blur="v$.password.$touch()"
+          :state="getValidationState(v$.password)"
         />
-        <b-form-invalid-feedback v-if="v$.password.$error">
-          <div v-if="!v$.password.required">Password is required.</div>
-          <div v-else-if="!v$.password.minLength || !v$.password.maxLength">
-            Password must be 5–10 characters.
-          </div>
+        <b-form-invalid-feedback v-if="v$.password.$dirty && v$.password.$invalid">
+          {{ errorMessageForPassword }}
         </b-form-invalid-feedback>
       </b-form-group>
 
@@ -79,29 +76,25 @@
           type="password"
           v-model="state.confirmedPassword"
           @blur="v$.confirmedPassword.$touch()"
+          :state="getValidationState(v$.confirmedPassword)"
         />
-        <b-form-invalid-feedback v-if="v$.confirmedPassword.$error">
-          <div v-if="!v$.confirmedPassword.required">Confirmation is required.</div>
-          <div v-else-if="!v$.confirmedPassword.sameAsPassword">
-            Passwords do not match.
-          </div>
+        <b-form-invalid-feedback v-if="v$.confirmedPassword.$dirty && v$.confirmedPassword.$invalid">
+          {{ errorMessageForConfirmedPassword }}
         </b-form-invalid-feedback>
       </b-form-group>
 
-
-      <!--Email-->
+      <!-- Email -->
       <b-form-group label="Email" label-for="email">
         <b-form-input
           id="email"
           v-model="state.email"
           @blur="v$.email.$touch()"
+          :state="getValidationState(v$.email)"
         />
-        <b-form-invalid-feedback v-if="v$.email.$error">
-          <div v-if="!v$.email.required">Email is required.</div>
+        <b-form-invalid-feedback v-if="v$.email.$dirty && v$.email.$invalid">
+          Email is required.
         </b-form-invalid-feedback>
       </b-form-group>
-
-      
 
       <b-button type="submit" variant="success" class="w-100">Register</b-button>
 
@@ -128,14 +121,14 @@ import { useVuelidate } from '@vuelidate/core';
 import { required, minLength, maxLength, alpha, sameAs } from '@vuelidate/validators';
 import rawCountries from '../assets/countries';
 import { computed, reactive } from 'vue';
-
-
+import { useRouter } from 'vue-router';
+import { useToast } from 'vue-toastification';
 
 export default {
   name: 'RegisterPage',
   setup() {
-    // const internalInstance = getCurrentInstance();
-    // const store = internalInstance.appContext.config.globalProperties.store;
+    const router = useRouter();
+    const toast = useToast();
 
     const state = reactive({
       username: '',
@@ -157,12 +150,8 @@ export default {
         maxLength: maxLength(8),
         alpha,
       },
-      firstname: {
-        required,
-      },
-      lastname: {
-        required,
-      },
+      firstname: { required },
+      lastname: { required },
       country: { required },
       password: {
         required,
@@ -171,34 +160,47 @@ export default {
       },
       confirmedPassword: {
         required,
-      sameAsPassword: sameAs(passwordRef),
+        sameAsPassword: sameAs(passwordRef),
       },
-      email: {
-        required,
-      },
+      email: { required },
     };
 
     const v$ = useVuelidate(rules, state);
 
+    const getValidationState = (field) => {
+      return field.$dirty ? !field.$invalid : null;
+    };
+
+    const errorMessageForUsername = computed(() => {
+      if (v$.value.username.required === false) return 'Username is required.';
+      if (v$.value.username.minLength === false || v$.value.username.maxLength === false)
+        return 'Username must be 3–8 characters, letters only.';
+      if (v$.value.username.alpha === false)
+        return 'Username must contain only letters.';
+      return '';
+    });
+
+    const errorMessageForPassword = computed(() => {
+      if (v$.value.password.required === false) return 'Password is required.';
+      if (v$.value.password.minLength === false || v$.value.password.maxLength === false)
+        return 'Password must be 5–10 characters.';
+      return '';
+    });
+
+    const errorMessageForConfirmedPassword = computed(() => {
+      if (v$.value.confirmedPassword.required === false) return 'Confirmation is required.';
+      if (v$.value.confirmedPassword.sameAsPassword === false)
+        return 'Passwords do not match.';
+      return '';
+    });
+
     const register = async () => {
-      console.log("register called");
-      console.log('password:', state.password);
-      console.log('confirmedPassword:', state.confirmedPassword);
-      console.log('same?', state.password === state.confirmedPassword);
+      v$.value.$touch();
       const valid = await v$.value.$validate();
       console.log("validation result:", valid);
-      // console.log("v$:", v$.value);
       if (!valid) {
-        console.log("Validation failed. Fields with errors:");
-        // for (const [key, field] of Object.entries(v$.value)) {
-        //   //print to console the field name and its value 
-
-        //   if (field?.$error) {
-        //     const value = field.$model !== undefined ? field.$model : '(no model)';
-        //     console.warn(`❌ ${key} failed validation. Value: ${value}`);
-        //   }
-        // }
-      return;
+        console.log("Validation failed.");
+        return;
       }
 
       try {
@@ -210,7 +212,7 @@ export default {
           country: state.country,
           email: state.email,
         });
-        await window.axios.post(`/Register`,{
+        await window.axios.post(`/Register`, {
           username: state.username,
           firstname: state.firstname,
           lastname: state.lastname,
@@ -218,8 +220,9 @@ export default {
           country: state.country,
           email: state.email,
         });
-        window.toast('Registration successful', 'You can now login', 'success');
-        window.router.push('/login');
+        toast.success('Registration successful! You can now login.');
+        console.log("Registration successful, redirecting to login page");
+        router.push('/login');
       } catch (err) {
         console.error('Registration failed:', err);
         state.submitError = err.response?.data?.message || 'Unexpected error.';
@@ -231,6 +234,10 @@ export default {
       countries: ['Select a country', ...rawCountries],
       register,
       v$,
+      getValidationState,
+      errorMessageForUsername,
+      errorMessageForPassword,
+      errorMessageForConfirmedPassword,
     };
   },
 };

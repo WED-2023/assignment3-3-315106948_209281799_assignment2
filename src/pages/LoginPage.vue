@@ -1,17 +1,17 @@
-
 <template>
   <div class="container mt-4" style="max-width: 400px;">
     <h2 class="mb-4">Login</h2>
     <b-form @submit.prevent="login">
-      <!-- Usermame -->
-      <b-form-group label="Usermame" label-for="username">
+      <!-- Username -->
+      <b-form-group label="Username" label-for="username">
         <b-form-input
           id="username"
           v-model="state.username"
+          @blur="v$.username.$touch()"
           :state="getValidationState(v$.username)"
         />
-        <b-form-invalid-feedback v-if="v$.username.$error">
-          Usermame is required.
+        <b-form-invalid-feedback v-if="v$.username.$dirty && v$.username.$invalid">
+          Username is required.
         </b-form-invalid-feedback>
       </b-form-group>
 
@@ -21,9 +21,10 @@
           id="password"
           type="password"
           v-model="state.password"
+          @blur="v$.password.$touch()"
           :state="getValidationState(v$.password)"
         />
-        <b-form-invalid-feedback v-if="v$.password.$error">
+        <b-form-invalid-feedback v-if="v$.password.$dirty && v$.password.$invalid">
           Password is required.
         </b-form-invalid-feedback>
       </b-form-group>
@@ -49,13 +50,20 @@
 </template>
 
 <script>
-import { reactive } from 'vue';
+import { reactive, getCurrentInstance } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
+import { useRouter } from 'vue-router';
+import { useToast } from 'vue-toastification';
 
 export default {
   name: 'LoginPage',
   setup() {
+    const router = useRouter();
+    const toast = useToast();
+    const { appContext } = getCurrentInstance();
+    const store = appContext.config.globalProperties.store;
+
     const state = reactive({
       username: '',
       password: '',
@@ -74,17 +82,29 @@ export default {
     };
 
     const login = async () => {
+      v$.value.$touch();
       const valid = await v$.value.$validate();
-      if (!valid) return;
+      console.log('validation result:', valid);
+      if (!valid) {
+        console.log('Validation failed');
+        return;
+      }
 
       try {
+        console.log('Sending login request:', {
+          username: state.username,
+          password: state.password,
+        });
         await window.axios.post('/login', {
           username: state.username,
           password: state.password,
         });
-        window.store.login(state.username);
-        window.router.push('/main');
+        store.login(state.username);
+        toast.success(`Welcome ${state.username}!`);
+        console.log('Login successful, redirecting to main page');
+        router.push('/');
       } catch (err) {
+        console.error('Login failed:', err);
         state.submitError = err.response?.data?.message || 'Unexpected error.';
       }
     };

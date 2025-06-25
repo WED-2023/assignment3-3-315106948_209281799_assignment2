@@ -4,7 +4,10 @@ import routes from './router/index';
 import axios from 'axios';
 window.axios = axios;
 
+axios.defaults.baseURL = 'http://localhost:3000';
 axios.defaults.withCredentials = true;
+import Toast, { POSITION } from 'vue-toastification';
+import 'vue-toastification/dist/index.css';
 
 import VueAxios from 'vue-axios';
 import { createRouter, createWebHistory } from 'vue-router';
@@ -53,6 +56,10 @@ app.use(router);
 app.use(VueAxios, axios);
 app.use(BootstrapVue3);
 app.use(Vuelidate); 
+app.use(Toast, {
+  position: POSITION.TOP_RIGHT,
+  timeout: 3000,
+});
 
 // Register global BootstrapVue3 components
 app.component('BContainer', BContainer);

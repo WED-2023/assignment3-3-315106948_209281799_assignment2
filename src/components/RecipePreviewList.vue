@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <h3>{{ title }}</h3>
-    
+
     <div class="row">
       <div class="col" v-for="r in recipes" :key="r.id">
         <RecipePreview class="recipePreview" :recipe="r" />
@@ -15,35 +15,39 @@ import RecipePreview from "./RecipePreview.vue";
 
 export default {
   name: "RecipePreviewList",
-  components: {
-    RecipePreview,
-  },
+  components: { RecipePreview },
   props: {
-    title: {
-      type: String,
-      required: true,
-    },
+    title: { type: String, required: true },
+    recipes: { type: Array, default: () => [] },
   },
   data() {
     return {
-      recipes: [],
+      internalRecipes: [],
     };
   },
   mounted() {
-    this.updateRecipes();
+    // If recipes prop is empty — load random
+    if (!this.recipes || this.recipes.length === 0) {
+      this.loadRandomRecipes();
+    }
   },
   methods: {
-    async updateRecipes() {
+    async loadRandomRecipes() {
       try {
-        const response = await this.axios.get(
-          this.$root.store.server_domain + "/recipes/random"
-        );
-        const recipes = response.data.recipes;
-        this.recipes = [];
-        this.recipes.push(...recipes);
-      } catch (error) {
-        console.log(error);
+        const response = await window.axios.get("/recipes/random");
+        this.internalRecipes = response.data || [];
+        console.log("Loaded random recipes:", this.internalRecipes);
+      } catch (err) {
+        console.error("Failed to load random recipes:", err);
       }
+    },
+  },
+  computed: {
+    // Use passed recipes if present — else use internal
+    displayedRecipes() {
+      return this.recipes && this.recipes.length > 0
+        ? this.recipes
+        : this.internalRecipes;
     },
   },
 };
