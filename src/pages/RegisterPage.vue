@@ -1,6 +1,13 @@
 <template>
-  <div class="container mt-4" style="max-width: 500px;">
+<b-container class="mt-5">
+  <b-row class="justify-content-center">
+    <b-col cols="12" md="8" lg="6">
+      <b-card class="custom-card p-4">
+
+
+  <!-- <div class="container mt-4" style="max-width: 500px;"> -->
     <h2 class="mb-4">Register</h2>
+
     <b-form @submit.prevent="register">
       <!-- Username -->
       <b-form-group label="Username" label-for="username">
@@ -96,11 +103,11 @@
         </b-form-invalid-feedback>
       </b-form-group>
 
-      <b-button type="submit" variant="success" class="w-100">Register</b-button>
+      <b-button type="submit" variant="primary" class="w-100">Register</b-button>
 
       <b-alert
         variant="danger"
-        class="mt-3"
+        class="mt-2 mb-0"
         dismissible
         v-if="state.submitError"
         show
@@ -113,7 +120,11 @@
         <router-link to="/login">Login here</router-link>
       </div>
     </b-form>
-  </div>
+          </b-card>
+    </b-col>
+  </b-row>
+</b-container>
+  <!-- </div> -->
 </template>
 
 <script>
@@ -242,3 +253,7 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+/* Add any specific styles for the RegisterPage here */
+</style>

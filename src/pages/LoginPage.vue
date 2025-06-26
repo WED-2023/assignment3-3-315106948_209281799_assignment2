@@ -1,6 +1,11 @@
 <template>
-  <div class="container mt-4" style="max-width: 400px;">
-    <h2 class="mb-4">Login</h2>
+<b-container class="mt-5">
+  <b-row class="justify-content-center">
+    <b-col cols="12" md="8" lg="5">
+      <b-card class="custom-card p-4">
+            <h2 class="mb-4">Login</h2>
+
+
     <b-form @submit.prevent="login">
       <!-- Username -->
       <b-form-group label="Username" label-for="username">
@@ -46,7 +51,10 @@
         <router-link to="/register">Register here</router-link>
       </div>
     </b-form>
-  </div>
+      </b-card>
+    </b-col>
+  </b-row>
+</b-container>
 </template>
 
 <script>

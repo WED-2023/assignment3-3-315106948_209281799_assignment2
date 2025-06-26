@@ -1,5 +1,10 @@
 <template>
-  <div class="container mt-4">
+  <b-container class="mt-5">
+  <b-row class="justify-content-center">
+    <b-col cols="12" md="8" lg="6">
+      <b-card class="custom-card p-4">
+
+  <!-- <div class="container mt-4"> -->
     <h1 class="title mb-4">Search Page</h1>
 
     <!-- Search form -->
@@ -12,19 +17,19 @@
         ></b-form-input>
       </b-form-group>
 
-      <b-form-group label="Number of results">
+      <b-form-group label="Number of results" label-for="numResults">
         <b-form-select v-model="numberOfResults" :options="resultOptions"></b-form-select>
       </b-form-group>
 
-      <b-form-group label="Cuisine">
+      <b-form-group label="Cuisine" label-for="cuisine">
         <b-form-select v-model="selectedCuisine" :options="cuisineOptions"></b-form-select>
       </b-form-group>
 
-      <b-form-group label="Diet">
+      <b-form-group label="Diet" label-for="diet">
         <b-form-select v-model="selectedDiet" :options="dietOptions"></b-form-select>
       </b-form-group>
 
-      <b-form-group label="Intolerances">
+      <b-form-group label="Intolerances" label-for="intolerances">
         <b-form-select v-model="selectedIntolerances" :options="intoleranceOptions"></b-form-select>
       </b-form-group>
 
@@ -46,9 +51,11 @@
     <!-- No results message -->
     <div class="mt-4 text-muted" v-else-if="searchPerformed">
       No results found.
-    </div>
-  </div>
-</template>
+      </div>
+          </b-card>
+    </b-col>
+  </b-row>
+</b-container></template>
 
 <script>
 import { ref, onMounted } from 'vue';
