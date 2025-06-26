@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="container">
     <h3>{{ title }}</h3>
 
@@ -8,6 +8,27 @@
       </div>
     </div>
   </div>
+</template> -->
+
+<template>
+  <b-container fluid class="my-4">
+    <b-card class="custom-card p-4">
+      <h3 class="mb-4">{{ title }}</h3>
+      <b-row class="g-4">
+        <b-col
+          v-for="r in displayedRecipes"
+          :key="r.id"
+          cols="12"
+          sm="6"
+          md="4"
+          lg="3"
+          xl="3"
+        >
+          <RecipePreview :recipe="r" />
+        </b-col>
+      </b-row>
+    </b-card>
+  </b-container>
 </template>
 
 <script>

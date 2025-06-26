@@ -1,61 +1,67 @@
 <template>
   <b-container class="mt-5">
   <b-row class="justify-content-center">
+    <!-- Search form + filters -->
     <b-col cols="12" md="8" lg="6">
       <b-card class="custom-card p-4">
+    
+        <h1 class="title mb-4">Search Page</h1>
 
-  <!-- <div class="container mt-4"> -->
-    <h1 class="title mb-4">Search Page</h1>
+        <!-- Search form -->
+        <b-form @submit.prevent="doSearch">
+          <b-form-group label="Search term" label-for="searchQuery">
+            <b-form-input
+              id="searchQuery"
+              v-model="searchQuery"
+              placeholder="Enter recipe keyword..."
+            ></b-form-input>
+          </b-form-group>
 
-    <!-- Search form -->
-    <b-form @submit.prevent="doSearch">
-      <b-form-group label="Search term" label-for="searchQuery">
-        <b-form-input
-          id="searchQuery"
-          v-model="searchQuery"
-          placeholder="Enter recipe keyword..."
-        ></b-form-input>
-      </b-form-group>
+          <b-form-group label="Number of results" label-for="numResults">
+            <b-form-select v-model="numberOfResults" :options="resultOptions"></b-form-select>
+          </b-form-group>
 
-      <b-form-group label="Number of results" label-for="numResults">
-        <b-form-select v-model="numberOfResults" :options="resultOptions"></b-form-select>
-      </b-form-group>
+          <b-form-group label="Cuisine" label-for="cuisine">
+            <b-form-select v-model="selectedCuisine" :options="cuisineOptions"></b-form-select>
+          </b-form-group>
 
-      <b-form-group label="Cuisine" label-for="cuisine">
-        <b-form-select v-model="selectedCuisine" :options="cuisineOptions"></b-form-select>
-      </b-form-group>
+          <b-form-group label="Diet" label-for="diet">
+            <b-form-select v-model="selectedDiet" :options="dietOptions"></b-form-select>
+          </b-form-group>
 
-      <b-form-group label="Diet" label-for="diet">
-        <b-form-select v-model="selectedDiet" :options="dietOptions"></b-form-select>
-      </b-form-group>
+          <b-form-group label="Intolerances" label-for="intolerances">
+            <b-form-select v-model="selectedIntolerances" :options="intoleranceOptions"></b-form-select>
+          </b-form-group>
 
-      <b-form-group label="Intolerances" label-for="intolerances">
-        <b-form-select v-model="selectedIntolerances" :options="intoleranceOptions"></b-form-select>
-      </b-form-group>
+          <b-button type="submit" variant="primary">Search</b-button>
+        </b-form>
 
-      <b-button type="submit" variant="primary">Search</b-button>
-    </b-form>
+        <!-- Sorting -->
+        <div v-if="recipes.length > 0" class="mt-4">
+          <b-form-group label="Sort by">
+            <b-form-select v-model="sortOption" :options="sortOptions" @change="sortRecipes"></b-form-select>
+          </b-form-group>
+        </div>
+      </b-card>
+    </b-col>
 
-    <!-- Sorting -->
-    <div v-if="recipes.length > 0" class="mt-4">
-      <b-form-group label="Sort by">
-        <b-form-select v-model="sortOption" :options="sortOptions" @change="sortRecipes"></b-form-select>
-      </b-form-group>
-    </div>
 
     <!-- Results -->
-    <div class="mt-4" v-if="recipes.length > 0">
-      <RecipePreviewList :title="`Results for '${searchQuery}'`" :recipes="recipes" />
-    </div>
-
-    <!-- No results message -->
-    <div class="mt-4 text-muted" v-else-if="searchPerformed">
-      No results found.
-      </div>
-          </b-card>
-    </b-col>
+    <b-col cols="12" class="mt-4">
+        <b-card class="custom-card p-4">
+          <RecipePreviewList
+            :title="`Results for '${searchQuery}'`"
+            :recipes="recipes"
+            v-if="recipes.length > 0"
+          />
+          <div class="mt-4 text-muted" v-else-if="searchPerformed">
+            No results found.
+          </div>
+        </b-card>
+      </b-col>
   </b-row>
-</b-container></template>
+</b-container>
+</template>
 
 <script>
 import { ref, onMounted } from 'vue';
