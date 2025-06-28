@@ -1,15 +1,3 @@
-<!-- <template>
-  <div class="container">
-    <h3>{{ title }}</h3>
-
-    <div class="row">
-      <div class="col" v-for="r in recipes" :key="r.id">
-        <RecipePreview class="recipePreview" :recipe="r" />
-      </div>
-    </div>
-  </div>
-</template> -->
-
 <template>
   <b-container fluid class="my-4">
     <b-card class="custom-card p-4">

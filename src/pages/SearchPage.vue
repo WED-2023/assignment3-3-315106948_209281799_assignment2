@@ -1,71 +1,108 @@
 <template>
-  <b-container class="mt-5">
-  <b-row class="justify-content-center">
-    <!-- Search form + filters -->
-    <b-col cols="12" md="8" lg="6">
-      <b-card class="custom-card p-4">
-    
-        <h1 class="title mb-4">Search Page</h1>
+  <b-container fluid class="mt-5">
+    <b-row class="justify-content-center">
+      <!-- Now spans 8/12 on XL, 10/12 on LG, 10/12 on MD -->
+      <b-col cols="12" md="10" lg="10" xl="8">
+        <b-card class="search-card p-4">
+          <h1 class="title mb-4 text-center">Search Recipes</h1>
 
-        <!-- Search form -->
-        <b-form @submit.prevent="doSearch">
-          <b-form-group label="Search term" label-for="searchQuery">
+          <!-- Inline search + toggle -->
+          <b-input-group class="mb-2">
             <b-form-input
-              id="searchQuery"
               v-model="searchQuery"
-              placeholder="Enter recipe keyword..."
-            ></b-form-input>
-          </b-form-group>
+              placeholder="🔍 Search recipes..."
+              @keyup.enter="doSearch"
+            />
+            <b-input-group-append>
+              <b-button variant="primary" @click="doSearch">Search</b-button>
+              <b-button
+                variant="outline-secondary"
+                @click="showFilters = !showFilters"
+                :pressed="showFilters"
+                title="Show/Hide Filters"
+              >
+                ⚙️
+              </b-button>
+            </b-input-group-append>
+          </b-input-group>
 
-          <b-form-group label="Number of results" label-for="numResults">
-            <b-form-select v-model="numberOfResults" :options="resultOptions"></b-form-select>
-          </b-form-group>
+          <!-- Filters panel, now with labels -->
+          <b-collapse :visible="showFilters" class="mb-3">
+            <b-row class="g-3">
+              <b-col cols="6" md="3">
+                <b-form-group label="Results" label-for="numberOfResults">
+                  <b-form-select
+                    id="numberOfResults"
+                    v-model="numberOfResults"
+                    :options="resultOptions"
+                    class="w-100"
+                  />
+                </b-form-group>
+              </b-col>
+              <b-col cols="6" md="3">
+                <b-form-group label="Cuisine" label-for="selectedCuisine">
+                  <b-form-select
+                    id="selectedCuisine"
+                    v-model="selectedCuisine"
+                    :options="cuisineOptions"
+                    class="w-100"
+                  />
+                </b-form-group>
+              </b-col>
+              <b-col cols="6" md="3">
+                <b-form-group label="Diet" label-for="selectedDiet">
+                  <b-form-select
+                    id="selectedDiet"
+                    v-model="selectedDiet"
+                    :options="dietOptions"
+                    class="w-100"
+                  />
+                </b-form-group>
+              </b-col>
+              <b-col cols="6" md="3">
+                <b-form-group label="Intolerances" label-for="selectedIntolerances">
+                  <b-form-select
+                    id="selectedIntolerances"
+                    v-model="selectedIntolerances"
+                    :options="intoleranceOptions"
+                    class="w-100"
+                  />
+                </b-form-group>
+              </b-col>
+            </b-row>
+          </b-collapse>
 
-          <b-form-group label="Cuisine" label-for="cuisine">
-            <b-form-select v-model="selectedCuisine" :options="cuisineOptions"></b-form-select>
-          </b-form-group>
+          <!-- Sort selector -->
+          <div v-if="recipes.length" class="mb-3">
+            <b-input-group>
+              <b-input-group-prepend is-text>Sort by:</b-input-group-prepend>
+              <b-form-select
+                v-model="sortOption"
+                :options="sortOptions"
+                @change="sortRecipes"
+              />
+            </b-input-group>
+          </div>
 
-          <b-form-group label="Diet" label-for="diet">
-            <b-form-select v-model="selectedDiet" :options="dietOptions"></b-form-select>
-          </b-form-group>
-
-          <b-form-group label="Intolerances" label-for="intolerances">
-            <b-form-select v-model="selectedIntolerances" :options="intoleranceOptions"></b-form-select>
-          </b-form-group>
-
-          <b-button type="submit" variant="primary">Search</b-button>
-        </b-form>
-
-        <!-- Sorting -->
-        <div v-if="recipes.length > 0" class="mt-4">
-          <b-form-group label="Sort by">
-            <b-form-select v-model="sortOption" :options="sortOptions" @change="sortRecipes"></b-form-select>
-          </b-form-group>
-        </div>
-      </b-card>
-    </b-col>
-
-
-    <!-- Results -->
-    <b-col cols="12" class="mt-4">
-        <b-card class="custom-card p-4">
-          <RecipePreviewList
-            :title="`Results for '${searchQuery}'`"
-            :recipes="recipes"
-            v-if="recipes.length > 0"
-          />
-          <div class="mt-4 text-muted" v-else-if="searchPerformed">
-            No results found.
+          <!-- Results -->
+          <div v-if="recipes.length > 0">
+            <RecipePreviewList
+              :title="`Results for '${searchQuery}'`"
+              :recipes="recipes"
+            />
+          </div>
+          <div v-else-if="searchPerformed" class="text-center text-muted py-4">
+            No results found for “{{ searchQuery }}.”
           </div>
         </b-card>
       </b-col>
-  </b-row>
-</b-container>
+    </b-row>
+  </b-container>
 </template>
 
 <script>
 import { ref, onMounted } from 'vue';
-import RecipePreviewList from '../components/RecipePreviewList.vue';
+import RecipePreviewList from '@/components/RecipePreviewList.vue';
 import { useToast } from 'vue-toastification';
 
 export default {
@@ -76,50 +113,58 @@ export default {
 
     const searchQuery = ref('');
     const numberOfResults = ref(5);
-    const selectedCuisine = ref('');
-    const selectedDiet = ref('');
-    const selectedIntolerances = ref('');
+    const selectedCuisine = ref('No Filter');
+    const selectedDiet = ref('No Filter');
+    const selectedIntolerances = ref('No Filter');
     const recipes = ref([]);
     const searchPerformed = ref(false);
     const sortOption = ref('');
+    const showFilters = ref(false);
 
-    const resultOptions = [5, 10, 15];
-    const cuisineOptions = ['No Filter', 'Italian', 'Chinese', 'Indian', 'French', 'Mexican', 'Thai'];
-    const dietOptions = ['No Filter', 'Vegetarian', 'Vegan', 'Gluten Free', 'Ketogenic', 'Pescetarian'];
-    const intoleranceOptions = ['No Filter', 'Gluten', 'Dairy', 'Egg', 'Peanut', 'Seafood', 'Sesame', 'Soy', 'Sulfite', 'Tree Nut', 'Wheat'];
+    const resultOptions = [
+      { value: 5, text: '5 results' },
+      { value: 10, text: '10 results' },
+      { value: 15, text: '15 results' },
+    ];
+    const cuisineOptions = [
+      'No Filter', 'Italian', 'Chinese', 'Indian', 'French', 'Mexican', 'Thai'
+    ];
+    const dietOptions = [
+      'No Filter', 'Vegetarian', 'Vegan', 'Gluten Free',
+      'Ketogenic', 'Pescetarian'
+    ];
+    const intoleranceOptions = [
+      'No Filter', 'Gluten', 'Dairy', 'Egg', 'Peanut',
+      'Seafood', 'Sesame', 'Soy', 'Sulfite', 'Tree Nut', 'Wheat'
+    ];
     const sortOptions = [
-      { value: '', text: 'No Sort' },
-      { value: 'time', text: 'Preparation Time' },
-      { value: 'popularity', text: 'Recipe Popularity' },
+      { value: '',        text: 'No Sort' },
+      { value: 'time',    text: 'Prep Time' },
+      { value: 'popularity', text: 'Popularity' },
     ];
 
     const doSearch = async () => {
+      if (!searchQuery.value.trim()) {
+        return toast.info('Please enter a keyword to search.');
+      }
       try {
-        const params = new URLSearchParams();
-        params.append('query', searchQuery.value);
-        params.append('number', numberOfResults.value);
-
-        if (selectedCuisine.value && selectedCuisine.value !== 'No Filter') {
+        const params = new URLSearchParams({
+          query: searchQuery.value,
+          number: numberOfResults.value
+        });
+        if (selectedCuisine.value !== 'No Filter')
           params.append('cuisine', selectedCuisine.value);
-        }
-
-        if (selectedDiet.value && selectedDiet.value !== 'No Filter') {
+        if (selectedDiet.value !== 'No Filter')
           params.append('diet', selectedDiet.value);
-        }
-
-        if (selectedIntolerances.value && selectedIntolerances.value !== 'No Filter') {
+        if (selectedIntolerances.value !== 'No Filter')
           params.append('intolerances', selectedIntolerances.value);
-        }
 
-        const response = await window.axios.get(`/recipes/search?${params.toString()}`);
-
-        recipes.value = response.data || [];
+        const { data } = await window.axios.get(`/recipes/search?${params}`);
+        recipes.value = data || [];
         searchPerformed.value = true;
-
-        // Save last search in localStorage
+        showFilters.value = false;
         localStorage.setItem('lastSearchQuery', searchQuery.value);
         localStorage.setItem('lastSearchResults', JSON.stringify(recipes.value));
-
         toast.success(`Found ${recipes.value.length} recipes.`);
       } catch (err) {
         console.error('Search failed:', err);
@@ -129,25 +174,21 @@ export default {
 
     const sortRecipes = () => {
       if (sortOption.value === 'time') {
-        recipes.value.sort((a, b) => (a.readyInMinutes || 0) - (b.readyInMinutes || 0));
+        recipes.value.sort((a, b) => a.readyInMinutes - b.readyInMinutes);
       } else if (sortOption.value === 'popularity') {
-        recipes.value.sort((a, b) => (b.popularity || 0) - (a.popularity || 0));
+        recipes.value.sort((a, b) => b.popularity - a.popularity);
       }
     };
 
     onMounted(async () => {
       try {
-        const response = await window.axios.get('/recipes/last-search');
-        recipes.value = response.data || [];
+        const { data } = await window.axios.get('/recipes/last-search');
+        recipes.value = data || [];
         searchPerformed.value = true;
-        if (localStorage.getItem('lastSearchQuery')) {
-          searchQuery.value = localStorage.getItem('lastSearchQuery');
-        }
+        const lastQ = localStorage.getItem('lastSearchQuery');
+        if (lastQ) searchQuery.value = lastQ;
       } catch (err) {
-        if (err.response && err.response.status === 404) {
-          console.log('No previous search found — this is OK.');
-          // do nothing — searchPerformed remains false
-        } else {
+        if (!(err.response && err.response.status === 404)) {
           console.error('Error loading last search:', err);
           toast.error('Error loading previous search.');
         }
@@ -162,15 +203,28 @@ export default {
       selectedIntolerances,
       recipes,
       searchPerformed,
+      sortOption,
+      showFilters,
       resultOptions,
       cuisineOptions,
       dietOptions,
       intoleranceOptions,
-      sortOption,
       sortOptions,
       doSearch,
-      sortRecipes,
+      sortRecipes
     };
-  },
+  }
 };
 </script>
+
+<style scoped>
+.search-card {
+  width: 100%;              /* allow card to fill its column */
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(4px);
+}
+.title {
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+</style>

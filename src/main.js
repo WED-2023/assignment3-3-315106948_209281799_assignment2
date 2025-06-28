@@ -13,7 +13,7 @@ import VueAxios from 'vue-axios';
 import { createRouter, createWebHistory } from 'vue-router';
 
 import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap/dist/js/bootstrap.bundle.js';
+// import 'bootstrap/dist/js/bootstrap.bundle.js';
 
 // BootstrapVue 3
 import BootstrapVue3 from 'bootstrap-vue-3';

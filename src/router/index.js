@@ -23,6 +23,31 @@ const routes = [
     component: () => import("../pages/SearchPage.vue"),
   },
   {
+    path: "/about",
+    name: "about",
+    component: () => import("../pages/AboutPage.vue"),
+  },
+  {
+    path: "/favorites",
+    name: "favorites",
+    component: () => import("../pages/FavoritesPage.vue"),
+  },
+  {
+    path: "/my-recipes",
+    name: "myRecipes",
+    component: () => import("../pages/MyRecipesPage.vue"),
+  },
+  {
+    path: "/family-recipes",
+    name: "familyRecipes",
+    component: () => import("../pages/FamilyRecipesPage.vue"),
+  },
+  {
+    path: "/create-recipe",
+    name: "createRecipe",
+    component: () => import("../pages/CreateRecipePage.vue"),
+  },
+  {
     path: "/recipe/:recipeId",
     name: "recipe",
     component: () => import("../pages/RecipeViewPage.vue"),

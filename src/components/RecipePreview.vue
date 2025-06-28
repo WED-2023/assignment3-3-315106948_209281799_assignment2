@@ -1,15 +1,43 @@
 <template>
   <div class="card h-100">
-    <img
-      v-if="recipe.image"
-      :src="recipe.image"
-      class="card-img-top recipe-image"
-      alt="Recipe image"
-    />
+    <!-- Clickable image wraps router-link -->
+    <router-link :to="{ name: 'recipe', params: { recipeId: recipe.id } }">
+      <img
+        v-if="recipe.image"
+        :src="recipe.image"
+        class="card-img-top recipe-image clickable"
+        alt="Recipe image"
+      />
+    </router-link>
+
     <div class="card-body text-center">
       <h5 class="card-title">{{ recipe.title }}</h5>
       <p class="card-text">{{ recipe.readyInMinutes }} minutes</p>
       <p class="card-text">{{ recipe.aggregateLikes }} likes</p>
+
+      <!-- Dietary badges -->
+      <div class="mb-2">
+        <b-badge variant="success" v-if="recipe.vegan" pill>Vegan</b-badge>
+        <b-badge variant="info" v-else-if="recipe.vegetarian" pill>Vegetarian</b-badge>
+        <b-badge variant="warning" v-if="recipe.glutenFree" pill>Gluten Free</b-badge>
+      </div>
+
+      <!-- Status indicators -->
+      <div class="status-indicators d-flex justify-content-center align-items-center gap-2">
+        <b-badge variant="secondary" v-if="recipe.isWatched" pill>
+          Viewed
+        </b-badge>
+        <!-- Only show add-to-favorites for logged-in users -->
+        <b-badge
+          v-if="store.username"
+          :variant="localFavorite ? 'danger' : 'light'"
+          pill
+          class="favorite-badge"
+          @click="addToFavorites"
+        >
+          {{ localFavorite ? 'Favorited' : 'Add to Favorites' }}
+        </b-badge>
+      </div>
     </div>
   </div>
 </template>
@@ -22,8 +50,25 @@ export default {
       type: Object,
       required: true
     }
+  },
+  data() {
+    return {
+      localFavorite: this.recipe.isFavorite || false
+    };
+  },
+  methods: {
+    async addToFavorites() {
+      if (!this.localFavorite) {
+        try {
+          await window.axios.post('/user/favorites', { recipeId: this.recipe.id });
+          this.localFavorite = true;
+        } catch (err) {
+          console.error('Failed to add favorite:', err);
+        }
+      }
+    }
   }
-}
+};
 </script>
 
 <style scoped>
@@ -46,22 +91,29 @@ export default {
   border-top-left-radius: 0.75rem;
   border-top-right-radius: 0.75rem;
 }
-
+.clickable {
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.clickable:hover {
+  opacity: 0.8;
+}
 .card-title {
-  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-family: 'Lucida Sans', sans-serif;
   font-size: 1.25rem;
   font-weight: 600;
   color: #2c3e50;
 }
-
 .card-text {
-  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-family: 'Lucida Sans', sans-serif;
   font-size: 0.95rem;
   color: #555;
   margin-bottom: 0.4rem;
 }
-
-.recipePreview {
-  margin-bottom: 20px;
+.status-indicators {
+  margin-top: 0.5rem;
+}
+.favorite-badge {
+  cursor: pointer;
 }
 </style>
