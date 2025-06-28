@@ -3,7 +3,7 @@
     <b-row class="justify-content-center">
       <!-- Now spans 8/12 on XL, 10/12 on LG, 10/12 on MD -->
       <b-col cols="12" md="10" lg="10" xl="8">
-        <b-card class="search-card p-4">
+        <b-card class="transparent-card p-4">
           <h1 class="title mb-4 text-center">Search Recipes</h1>
 
           <!-- Inline search + toggle -->
@@ -11,8 +11,7 @@
             <b-form-input
               v-model="searchQuery"
               placeholder="🔍 Search recipes..."
-              @keyup.enter="doSearch"
-            />
+              @keyup.enter="doSearch"/>
             <b-input-group-append>
               <b-button variant="primary" @click="doSearch">Search</b-button>
               <b-button
@@ -218,13 +217,12 @@ export default {
 </script>
 
 <style scoped>
-.search-card {
-  width: 100%;              /* allow card to fill its column */
-  background: rgba(255,255,255,0.85);
-  backdrop-filter: blur(4px);
+.create-recipe-page h1 {
+  margin-bottom: 1rem;
 }
 .title {
-  font-size: 1.75rem;
+  font-size: 3rem;
   font-weight: 600;
+  font-family:Verdana, Geneva, Tahoma, sans-serif;
 }
 </style>

@@ -43,6 +43,7 @@
   
   <script>
   export default {
+    props: ['recipeId'],
     data() {
       return {
         recipe: null
