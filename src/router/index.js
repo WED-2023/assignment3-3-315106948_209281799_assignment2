@@ -1,5 +1,6 @@
 import Main from "../pages/MainPage.vue";
 import NotFound from "../pages/NotFoundPage.vue";
+import RecipeViewPage from "../pages/RecipeViewPage.vue";
 
 const routes = [
   {
@@ -50,7 +51,7 @@ const routes = [
   {
     path: "/recipe/:recipeId",
     name: "recipe",
-    component: () => import("../pages/RecipeViewPage.vue"),
+    component: () => RecipeViewPage,
     props: true,
   },
   {

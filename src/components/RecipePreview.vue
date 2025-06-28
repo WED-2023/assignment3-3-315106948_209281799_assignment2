@@ -13,7 +13,6 @@
     <div class="card-body text-center">
       <h5 class="card-title">{{ recipe.title }}</h5>
       <p class="card-text">{{ recipe.readyInMinutes }} minutes</p>
-      <p class="card-text">{{ recipe.aggregateLikes }} likes</p>
 
       <!-- Dietary badges -->
       <div class="mb-2">
@@ -24,10 +23,12 @@
 
       <!-- Status indicators -->
       <div class="status-indicators d-flex justify-content-center align-items-center gap-2">
-        <b-badge variant="secondary" v-if="recipe.isWatched" pill>
+        <!-- Only for logged-in users -->
+        <b-badge variant="secondary" v-if="store.username && recipe.watched" pill>
           Viewed
         </b-badge>
-        <!-- Only show add-to-favorites for logged-in users -->
+
+        <!-- Favorite button (still only for logged-in users) -->
         <b-badge
           v-if="store.username"
           :variant="localFavorite ? 'danger' : 'light'"
@@ -53,8 +54,15 @@ export default {
   },
   data() {
     return {
-      localFavorite: this.recipe.isFavorite || false
+      // Use the server‐provided `favorite` field as initial state
+      localFavorite: this.recipe.favorite || false
     };
+  },
+  computed: {
+    // Access global store via this.$root
+    store() {
+      return this.$root.store;
+    }
   },
   methods: {
     async addToFavorites() {
