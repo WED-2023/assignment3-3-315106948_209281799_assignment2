@@ -44,6 +44,12 @@
               Create New Recipe
             </b-nav-item>
 
+            <!-- Meal Plan indicator -->
+            <b-nav-item :to="{ name: 'mealPlan' }">
+              Meal Plan
+              <b-badge pill variant="light">{{ mealPlanCount }}</b-badge>
+            </b-nav-item>
+
             <!-- Logout -->
             <b-button
               variant="outline-light"
@@ -67,6 +73,42 @@ export default {
     store: {
       type: Object,
       required: true
+    }
+  },
+  data() {
+    return {
+      mealPlanCount: 0
+    };
+  },
+  async mounted() {
+    // fetch count when component mounts and user is logged in
+    if (this.store.username) {
+      await this.fetchMealPlanCount();
+    }
+  },
+  watch: {
+    // re-fetch when login/logout happens
+    'store.username'(newVal) {
+      if (newVal) {
+        this.fetchMealPlanCount();
+      } else {
+        this.mealPlanCount = 0;
+      }
+    }
+  },
+  methods: {
+    async fetchMealPlanCount() {
+      try {
+        const response = await window.axios.get(
+          `${this.store.server_domain}/recipes/meal-plan`
+        );
+        this.mealPlanCount = Array.isArray(response.data)
+          ? response.data.length
+          : 0;
+      } catch (err) {
+        console.error("Failed to fetch meal plan count:", err);
+        this.mealPlanCount = 0;
+      }
     }
   }
 };
