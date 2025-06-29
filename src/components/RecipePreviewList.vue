@@ -3,7 +3,7 @@
     <b-card class="custom-card p-4">
       <h3 class="mb-4">{{ title }}</h3>
 
-      <div class="recipe-list" :class="{ blur: blur }">
+      <div class="recipe-list" :class="[displayMode, { blur: blur }]">
         <RecipePreview
           v-for="r in displayedRecipes"
           :key="r.id"
@@ -23,7 +23,8 @@ export default {
   props: {
     title: { type: String, required: true },
     recipes: { type: Array, default: () => [] },
-    blur: { type: Boolean, default: false }, // Optional prop to apply blur effect
+    blur: { type: Boolean, default: false }, 
+    displayMode: { type: String, default: "grid" } 
 
   },
   data() {
@@ -60,14 +61,21 @@ export default {
 </script>
 
 <style scoped>
-/* .container {
-  min-height: 400px;
-} */
 
 .recipe-list {
+  display: grid;
+  gap: 1.5rem;
+}
+
+
+.recipe-list.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.recipe-list.list {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem; 
 }
 
 .blur {
@@ -76,4 +84,5 @@ export default {
   user-select: none;
   opacity: 0.8;
 }
+
 </style>

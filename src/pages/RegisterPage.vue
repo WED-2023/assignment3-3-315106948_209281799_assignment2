@@ -9,6 +9,20 @@
     <h1 class="mb-4">Register</h1>
 
     <b-form @submit.prevent="register">
+      <!-- Validation Errors -->
+      <b-alert
+        variant="danger"
+        v-if="allValidationErrors.length > 0"
+        show
+        class="mb-4"
+      >
+        <strong>Please fix the following errors:</strong>
+        <ul class="mb-0">
+          <li v-for="(err, i) in allValidationErrors" :key="i">{{ err }}</li>
+        </ul>
+      </b-alert>
+
+
       <!-- Username -->
       <b-form-group label="Username" label-for="username">
         <b-form-input
@@ -17,7 +31,8 @@
           @blur="v$.username.$touch()"
           :state="getValidationState(v$.username)"
         />
-        <b-form-invalid-feedback v-if="v$.username.$dirty && v$.username.$invalid">
+        <b-form-invalid-feedback 
+        v-if="v$.username.$dirty && v$.username.$invalid">
           {{ errorMessageForUsername }}
         </b-form-invalid-feedback>
       </b-form-group>
@@ -47,6 +62,7 @@
           Last Name is required.
         </b-form-invalid-feedback>
       </b-form-group>
+
 
       <!-- Country -->
       <b-form-group label="Country" label-for="country">
@@ -105,15 +121,12 @@
 
       <b-button type="submit" variant="primary" class="w-100">Register</b-button>
 
-      <b-alert
-        variant="danger"
-        class="mt-2 mb-0"
-        dismissible
+      <b-form-invalid-feedback
         v-if="state.submitError"
-        show
+        class="d-block mt-3 text-danger"
       >
-        Registration failed: {{ state.submitError }}
-      </b-alert>
+        {{ state.submitError }}
+      </b-form-invalid-feedback>
 
       <div class="mt-2">
         Already have an account?
@@ -129,7 +142,7 @@
 
 <script>
 import { useVuelidate } from '@vuelidate/core';
-import { required, minLength, maxLength, alpha, sameAs } from '@vuelidate/validators';
+import { required, minLength, maxLength, alpha, sameAs, helpers } from '@vuelidate/validators';
 import rawCountries from '../assets/countries';
 import { computed, reactive } from 'vue';
 import { useRouter } from 'vue-router';
@@ -154,6 +167,9 @@ export default {
 
     const passwordRef = computed(() => state.password);
 
+    const hasNumber = helpers.regex('hasNumber', /\d/);
+    const hasSpecialChar = helpers.regex('hasSpecialChar', /[!@#$%^&*(),.?":{}|<>]/);
+
     const rules = {
       username: {
         required,
@@ -168,6 +184,8 @@ export default {
         required,
         minLength: minLength(5),
         maxLength: maxLength(10),
+        hasNumber,
+        hasSpecialChar
       },
       confirmedPassword: {
         required,
@@ -192,9 +210,11 @@ export default {
     });
 
     const errorMessageForPassword = computed(() => {
-      if (v$.value.password.required === false) return 'Password is required.';
-      if (v$.value.password.minLength === false || v$.value.password.maxLength === false)
-        return 'Password must be 5–10 characters.';
+      const pw = v$.value.password;
+      if (pw.required === false) return 'Password is required.';
+      if (pw.minLength === false || pw.maxLength === false) return 'Password must be 5–10 characters.';
+      if (pw.hasNumber === false) return 'Password must include at least one number.';
+      if (pw.hasSpecialChar === false) return 'Password must include at least one special character.';
       return '';
     });
 
@@ -204,6 +224,35 @@ export default {
         return 'Passwords do not match.';
       return '';
     });
+
+    // Collect all validation errors into a single array
+    const allValidationErrors = computed(() => {
+    const errors = [];
+
+    if (v$.value.username.$dirty && v$.value.username.$invalid)
+      errors.push(errorMessageForUsername.value);
+
+    if (v$.value.firstname.$dirty && v$.value.firstname.$invalid)
+      errors.push('First Name is required.');
+
+    if (v$.value.lastname.$dirty && v$.value.lastname.$invalid)
+      errors.push('Last Name is required.');
+
+    if (v$.value.country.$dirty && v$.value.country.$invalid)
+      errors.push('Country is required.');
+
+    if (v$.value.password.$dirty && v$.value.password.$invalid)
+      errors.push(errorMessageForPassword.value);
+
+    if (v$.value.confirmedPassword.$dirty && v$.value.confirmedPassword.$invalid)
+      errors.push(errorMessageForConfirmedPassword.value);
+
+    if (v$.value.email.$dirty && v$.value.email.$invalid)
+      errors.push('Email is required.');
+
+    return errors;
+  });
+
 
     const register = async () => {
       v$.value.$touch();
@@ -249,6 +298,7 @@ export default {
       errorMessageForUsername,
       errorMessageForPassword,
       errorMessageForConfirmedPassword,
+      allValidationErrors,
     };
   },
 };

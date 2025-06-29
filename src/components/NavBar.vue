@@ -2,7 +2,7 @@
 <template>
   <b-navbar class="navbar sticky-top" toggleable="lg" type="dark" variant="primary">
     <b-container>
-      <b-navbar-brand to="/">Vue Recipes</b-navbar-brand>
+      <b-navbar-brand to="/">Y&D Recipes</b-navbar-brand>
       <b-navbar-toggle target="nav-collapse" />
       <b-collapse id="nav-collapse" is-nav>
         <!-- Always-visible links -->
@@ -16,7 +16,7 @@
         <b-navbar-nav class="ms-auto">
           <!-- Guest -->
           <template v-if="!store.username">
-            <b-nav-item disabled>Hello Guest</b-nav-item>
+            <b-nav-item disabled style="color: grey" >Hello Guest</b-nav-item>
             <b-nav-item :to="{ name: 'login' }">Login</b-nav-item>
             <b-nav-item :to="{ name: 'register' }">Register</b-nav-item>
           </template>
@@ -51,14 +51,9 @@
             </b-nav-item>
 
             <!-- Logout -->
-            <b-button
-              variant="outline-light"
-              size="sm"
-              class="ms-2"
-              @click="$emit('logout')"
-            >
+            <b-nav-item @click.prevent="$emit('logout')" href="#" class="ms-2">
               Logout
-            </b-button>
+            </b-nav-item>
           </template>
         </b-navbar-nav>
       </b-collapse>
@@ -116,22 +111,22 @@ export default {
 
 <style scoped>
 nav.navbar {
-  background-color: #ffffff !important;
+  background-color: #8fafce93 !important;
   border-radius: 12px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
   backdrop-filter: blur(10px);
-  font-family: 'Segoe UI Variable Small Light', sans-serif;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-weight:100;
+  font-size: 1.2rem;
 }
 
 .navbar-brand {
-  font-size: 1.5rem;
-  font-weight: bold;
+  font-size: 2rem;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-weight: 800;
   letter-spacing: 1px;
 }
 
-.navbar-nav .nav-link {
-  margin-left: 15px;
-  font-weight: 500;
-  color: #2c3e50 !important;
-}
+
+
 </style>

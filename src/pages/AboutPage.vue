@@ -1,16 +1,31 @@
-<!-- src/pages/AboutPage.vue -->
 <template>
   <div class="about-page container mt-4">
     <b-card class="transparent-card p-4">
+      <h1 class="title text-center mb-4">About Y&D Recipes</h1>
 
-      <h1 class="title text-center">About Vue Recipes</h1>
-      <p>
-        Welcome to Vue Recipes! This app helps you discover new recipes,
-        save your favorites, and plan meals with ease. Built with Vue 3,
-        BootstrapVue, and the Spoonacular API.
+      <p class="about-text">
+        Y&D Recipes is a personal recipe management system developed by a passionate two-person team as part of a full-stack web development course.
+        The platform allows users to explore new recipes, save personal and family favorites, and even track preparation progress – all in one place!
       </p>
-    </b-card>
 
+      <p class="about-text">
+        This project integrates <strong>Vue.js 3</strong>, <strong>BootstrapVue</strong>, and <strong>Node.js with MySQL</strong> for a modern and responsive experience.
+        Our backend leverages external APIs like <a href="https://spoonacular.com/food-api" target="_blank">Spoonacular</a> to bring a rich collection of recipe data.
+      </p>
+
+      <h4 class="mt-4">Team Members</h4>
+      <ul>
+        <li><strong>Daniel Nisanov</strong> - Frontend lead & UX</li>
+        <li><strong>Yuval Aviv</strong> - Backend lead & database integration</li>
+      </ul>
+
+      <h4 class="mt-4">Past Exercises</h4>
+      <ul>
+        <li><a href="https://example.com/exercise1" target="_blank">Exercise 1 – Vue Basics</a></li>
+        <li><a href="https://example.com/exercise2" target="_blank">Exercise 2 – REST API Integration</a></li>
+        <li><a href="https://example.com/exercise3" target="_blank">Exercise 3 – Authentication and Sessions</a></li>
+      </ul>
+    </b-card>
   </div>
 </template>
 
@@ -21,4 +36,9 @@ export default {
 </script>
 
 <style scoped>
+.about-text {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #2c3e50;
+}
 </style>

@@ -163,18 +163,74 @@
               </b-col>
             </b-row>
 
-            <!-- 9) Summary + Instructions -->
+            <!-- 9) Summary + Instructions + Ingredients  -->
             <b-form-group label="Summary" label-for="summary">
               <b-form-textarea id="summary" v-model="form.summary" rows="3" />
             </b-form-group>
-            <b-form-group label="Instructions" label-for="instructions">
-              <b-form-textarea
-                id="instructions"
-                v-model="form.instructions"
-                rows="5"
-                required
-              />
+
+            <b-form-group label="Instructions">
+              <div
+                v-for="(instruction, index) in form.instructions"
+                :key="index"
+                class="d-flex align-items-center mb-2"
+              >
+                <b-form-input
+                  v-model="form.instructions[index]"
+                  placeholder="e.g. Preheat oven to 180°C"
+                  class="me-2"
+                />
+                <b-button
+                  variant="danger"
+                  size="sm"
+                  @click="removeInstruction(index)"
+                  v-if="form.instructions.length > 1"
+                >🗑️</b-button>
+              </div>
+              <b-button
+                variant="outline-primary"
+                size="sm"
+                @click="addInstruction"
+              >➕ Add Step</b-button>
             </b-form-group>
+
+
+            <b-form-group label="Ingredients">
+              <div
+                v-for="(ingredient, index) in form.ingredients"
+                :key="index"
+                class="d-flex align-items-center mb-2"
+              >
+                <b-form-input
+                  v-model="ingredient.name"
+                  placeholder="e.g. flour"
+                  class="me-2"
+                />
+                <b-form-input
+                  type="number"
+                  v-model.number="ingredient.amount"
+                  placeholder="Qty"
+                  class="me-2"
+                  min="0"
+                />
+                <b-form-input
+                  v-model="ingredient.unit"
+                  placeholder="Unit (e.g. tbsp)"
+                  class="me-2"
+                />
+                <b-button
+                  variant="danger"
+                  size="sm"
+                  @click="removeIngredient(index)"
+                  v-if="form.ingredients.length > 1"
+                >🗑️</b-button>
+              </div>
+              <b-button
+                variant="outline-primary"
+                size="sm"
+                @click="addIngredient"
+              >➕ Add Ingredient</b-button>
+            </b-form-group>
+
 
             <!-- 10) Family-only fields -->
             <div
@@ -242,7 +298,8 @@ export default {
         sourceName: "",
         license: "",
         summary: "",
-        instructions: "",
+        instructions: [""],
+        ingredients: [{ name: "", amount: null, unit: "" }],
         // family-only
         origin_person: "",
         occasion: "",
@@ -257,9 +314,11 @@ export default {
   methods: {
     async onSubmit() {
       try {
-        // Build payload **without** any id field
-        const payload = { ...this.form };
-        // Send to the correct endpoint
+        const payload = {
+          ...this.form,
+          instructions: this.form.instructions.filter(i => i.trim() !== ""),
+          ingredients: this.form.ingredients.filter(i => i.name.trim() !== "")
+        };
         if (payload.type === "personal") {
           await window.axios.post("/user/myRecipes", payload);
           this.$router.push({ name: "myRecipes" });
@@ -270,15 +329,25 @@ export default {
       } catch (err) {
         console.error("Failed to create recipe:", err);
       }
-    }
+    },
+
+    addInstruction() {
+      this.form.instructions.push("");
+    },
+    removeInstruction(index) {
+      this.form.instructions.splice(index, 1);
+    },
+
+
+    addIngredient() {
+      this.form.ingredients.push({ name: "", amount: null, unit: "" });
+    },
+    removeIngredient(index) {
+      this.form.ingredients.splice(index, 1);
+    },
+
   }
 };
 </script>
 
-<style scoped>
-.title {
-  font-size: 2.5rem;
-  font-weight: 600;
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-}
-</style>
+

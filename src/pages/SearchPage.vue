@@ -87,6 +87,7 @@
             <RecipePreviewList
               :title="`Results for '${searchQuery}'`"
               :recipes="recipes"
+              displayMode="grid"
             />
           </div>
           <div v-else-if="searchPerformed" class="text-center text-muted py-4">
@@ -215,7 +216,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<!-- <style scoped>
 .create-recipe-page h1 {
   margin-bottom: 1rem;
 }
@@ -224,4 +225,4 @@ export default {
   font-weight: 600;
   font-family:Verdana, Geneva, Tahoma, sans-serif;
 }
-</style>
+</style> -->

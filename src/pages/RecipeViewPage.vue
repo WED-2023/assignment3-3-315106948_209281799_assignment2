@@ -1,12 +1,15 @@
 <!-- src/pages/RecipeViewPage.vue -->
 <template>
-  <b-container fluid class="mt-4" v-if="recipe">
-    <b-row>
-      <b-col>
-        <div class="text-center mb-4">
-          <h1>{{ recipe.title }}</h1>
-          <img :src="recipe.image" class="img-fluid my-3" alt="Recipe image" />
-        </div>
+  <div class="container mt-4">
+    <b-row class="justify-content-center">
+      <b-col cols="12" md="10" lg="10" xl="8">
+        <b-card class="transparent-card p-4" v-if="recipe">
+
+          <!-- Title and image -->
+          <div class="text-center mb-4">
+            <h1 class="title">{{ recipe.title }}</h1>
+            <img :src="recipe.image" class="img-fluid my-3 rounded" alt="Recipe image" />
+          </div>
 
         <!-- Prepare & Meal-Plan Buttons -->
         <div class="mb-4 text-center">
@@ -18,31 +21,38 @@
           </b-button>
         </div>
 
-        <div class="mb-3">
-          <strong>Ready in:</strong> {{ recipe.readyInMinutes }} minutes<br/>
-          <strong>Dietary:</strong>
-          <span v-if="recipe.vegan">🌱 Vegan</span>
-          <span v-else-if="recipe.vegetarian">🥕 Vegetarian</span>
-          <span v-if="recipe.glutenFree">🚫 Gluten-Free</span>
-        </div>
+          <!-- Basic Info -->
+          <div class="mb-3 text-center">
+            <p><strong>Ready in:</strong> {{ recipe.readyInMinutes }} minutes</p>
+            <p>
+              <strong>Dietary:</strong>
+              <span v-if="recipe.vegan">🌱 Vegan</span>
+              <span v-else-if="recipe.vegetarian">🥕 Vegetarian</span>
+              <span v-if="recipe.glutenFree">🚫 Gluten-Free</span>
+            </p>
+          </div>
 
-        <b-row>
-          <b-col md="6">
-            <h4>Ingredients</h4>
-            <ul>
-              <li v-for="ing in recipe.ingredients" :key="ing.id">
-                {{ ing.original || `${ing.amount} ${ing.unit} ${ing.name}` }}
-              </li>
-            </ul>
-          </b-col>
-          <b-col md="6">
-            <h4>Instructions</h4>
-            <p v-html="recipe.instructions"></p>
-          </b-col>
-        </b-row>
+          <!-- Ingredients and Instructions -->
+          <b-row>
+            <!-- Ingredients -->
+            <h3 class="subtitle">Ingredients</h3>
+            <div v-if="recipe.ingredients && recipe.ingredients.length">
+              <ul class="custom-list">
+                <li v-for="ing in recipe.ingredients" :key="ing.id || ing.name">
+                  {{ ing.original || `${ing.amount} ${ing.unit} ${ing.name}` }}
+                </li>
+              </ul>
+            </div>
+            <p v-else class="fallback-text">No ingredients provided.</p>
+
+            <!-- Instructions -->
+            <h3 class="subtitle">Instructions</h3>
+            <p v-html="recipe.instructions || 'No instructions provided.'" class="fallback-text" />
+          </b-row>
+        </b-card>
       </b-col>
     </b-row>
-  </b-container>
+  </div>
 </template>
 
 <script setup>
@@ -88,4 +98,5 @@ async function addToMealPlan() {
   max-width: 100%;
   height: auto;
 }
+
 </style>
