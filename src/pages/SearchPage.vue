@@ -1,10 +1,9 @@
 <template>
-  <b-container fluid class="mt-5">
+  <div class="container mt-4">
     <b-row class="justify-content-center">
-      <!-- Now spans 8/12 on XL, 10/12 on LG, 10/12 on MD -->
       <b-col cols="12" md="10" lg="10" xl="8">
         <b-card class="transparent-card p-4">
-          <h1 class="title mb-4 text-center">Search Recipes</h1>
+          <h1 class="title text-center">Search Recipes</h1>
 
           <!-- Inline search + toggle -->
           <b-input-group class="mb-2">
@@ -96,7 +95,7 @@
         </b-card>
       </b-col>
     </b-row>
-  </b-container>
+  </div>
 </template>
 
 <script>

@@ -1,60 +1,63 @@
 <!-- src/pages/MealPlanPage.vue -->
 <template>
-  <b-container fluid class="mt-4">
-    <b-row>
-      <b-col>
-        <h1>My Meal Plan</h1>
-        <b-button variant="danger" size="sm" @click="clearPlan" class="mb-3">
-          Clear Meal Plan
-        </b-button>
+  <div class="container mt-4">
+    <b-row class="justify-content-center">
+      <b-col cols="12" md="10" lg="10" xl="8">
+        <b-card class="transparent-card p-4">
+          <h1 class="title text-center mb-4">My Meal Plan</h1>
 
-        <b-list-group>
-          <b-list-group-item
-            v-for="(item, idx) in plan"
-            :key="item.recipe.id"
-            class="d-flex justify-content-between align-items-center flex-wrap"
-          >
-            <div class="d-flex align-items-center">
-              <b-button
-                size="sm"
-                variant="outline-secondary"
-                @click="moveUp(idx)"
-                :disabled="idx === 0"
-              >↑</b-button>
-              <b-button
-                size="sm"
-                variant="outline-secondary"
-                class="ms-1"
-                @click="moveDown(idx)"
-                :disabled="idx === plan.length - 1"
-              >↓</b-button>
-              <router-link
-                :to="{ name: 'recipe', params: { recipeId: item.recipe.id } }"
-                class="ms-3"
-              >
-                {{ idx + 1 }}. {{ item.recipe.title }}
-              </router-link>
-            </div>
-            <div class="d-flex align-items-center mt-2 mt-md-0">
-              <b-progress
-                :value="item.progressPercent"
-                max="100"
-                height="1rem"
-                class="me-3 flex-grow-1"
-              />
-              <b-button
-                size="sm"
-                variant="outline-danger"
-                @click="remove(item.recipe.id)"
-              >
-                Remove
-              </b-button>
-            </div>
-          </b-list-group-item>
-        </b-list-group>
+          <b-button variant="danger" size="sm" @click="clearPlan" class="mb-3">
+            Clear Meal Plan
+          </b-button>
+
+          <b-list-group>
+            <b-list-group-item
+              v-for="(item, idx) in plan"
+              :key="item.recipe.id"
+              class="d-flex justify-content-between align-items-center flex-wrap"
+            >
+              <div class="d-flex align-items-center">
+                <b-button
+                  size="sm"
+                  variant="outline-secondary"
+                  @click="moveUp(idx)"
+                  :disabled="idx === 0"
+                >↑</b-button>
+                <b-button
+                  size="sm"
+                  variant="outline-secondary"
+                  class="ms-1"
+                  @click="moveDown(idx)"
+                  :disabled="idx === plan.length - 1"
+                >↓</b-button>
+                <router-link
+                  :to="{ name: 'recipe', params: { recipeId: item.recipe.id } }"
+                  class="ms-3"
+                >
+                  {{ idx + 1 }}. {{ item.recipe.title }}
+                </router-link>
+              </div>
+              <div class="d-flex align-items-center mt-2 mt-md-0">
+                <b-progress
+                  :value="item.progressPercent"
+                  max="100"
+                  height="1rem"
+                  class="me-3 flex-grow-1"
+                />
+                <b-button
+                  size="sm"
+                  variant="outline-danger"
+                  @click="remove(item.recipe.id)"
+                >
+                  Remove
+                </b-button>
+              </div>
+            </b-list-group-item>
+          </b-list-group>
+        </b-card>
       </b-col>
     </b-row>
-  </b-container>
+  </div>
 </template>
 
 <script>

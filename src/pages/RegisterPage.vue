@@ -2,11 +2,11 @@
 <b-container class="mt-5">
   <b-row class="justify-content-center">
     <b-col cols="12" md="8" lg="6">
-      <b-card class="custom-card p-4">
+        <b-card class="transparent-card p-4">
 
 
   <!-- <div class="container mt-4" style="max-width: 500px;"> -->
-    <h2 class="mb-4">Register</h2>
+    <h1 class="mb-4">Register</h1>
 
     <b-form @submit.prevent="register">
       <!-- Username -->
@@ -255,5 +255,4 @@ export default {
 </script>
 
 <style scoped>
-/* Add any specific styles for the RegisterPage here */
 </style>

@@ -2,19 +2,14 @@
   <b-container fluid class="my-4">
     <b-card class="custom-card p-4">
       <h3 class="mb-4">{{ title }}</h3>
-      <b-row class="g-4">
-        <b-col
+
+      <div class="recipe-list" :class="{ blur: blur }">
+        <RecipePreview
           v-for="r in displayedRecipes"
           :key="r.id"
-          cols="12"
-          sm="6"
-          md="4"
-          lg="3"
-          xl="3"
-        >
-          <RecipePreview :recipe="r" />
-        </b-col>
-      </b-row>
+          :recipe="r"
+        />
+      </div>
     </b-card>
   </b-container>
 </template>
@@ -28,6 +23,8 @@ export default {
   props: {
     title: { type: String, required: true },
     recipes: { type: Array, default: () => [] },
+    blur: { type: Boolean, default: false }, // Optional prop to apply blur effect
+
   },
   data() {
     return {
@@ -63,7 +60,20 @@ export default {
 </script>
 
 <style scoped>
-.container {
+/* .container {
   min-height: 400px;
+} */
+
+.recipe-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem; 
+}
+
+.blur {
+  filter: blur(3px);
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.8;
 }
 </style>

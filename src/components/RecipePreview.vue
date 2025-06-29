@@ -94,7 +94,7 @@ export default {
 }
 .recipe-image {
   width: 100%;
-  height: 200px;
+  height: 150px;
   object-fit: cover;
   border-top-left-radius: 0.75rem;
   border-top-right-radius: 0.75rem;

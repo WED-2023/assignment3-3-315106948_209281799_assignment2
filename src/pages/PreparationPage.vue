@@ -1,23 +1,18 @@
-<!-- src/pages/PreparationPage.vue -->
 <template>
-  <div>
-    <!-- Loading spinner until recipe is populated -->
-    <b-container
-      v-if="!recipe"
-      fluid
-      class="d-flex justify-content-center align-items-center"
-      style="height: 50vh"
-    >
+  <div class="container mt-4">
+    <!-- Loading Spinner -->
+    <b-row v-if="!recipe" class="justify-content-center align-items-center" style="height: 50vh">
       <b-spinner label="Loading recipe…" />
-    </b-container>
+    </b-row>
 
-    <!-- Once we have recipe data, render it -->
-    <b-container v-else fluid class="mt-4">
-      <b-row>
-        <b-col>
-          <h1>{{ recipe.title }}</h1>
+    <!-- Loaded Content -->
+    <b-row v-else class="justify-content-center">
+      <b-col cols="12" md="10" lg="10" xl="8">
+        <b-card class="transparent-card p-4">
+          <h1 class="title text-center mb-4">{{ recipe.title }}</h1>
 
-          <div class="mb-3 d-flex align-items-center">
+          <!-- Servings Display -->
+          <div class="mb-4 d-flex align-items-center justify-content-center">
             <strong>Servings:</strong>
             <span class="ms-2">{{ servings }}</span>
             <b-button
@@ -30,14 +25,16 @@
             </b-button>
           </div>
 
-          <h4>Ingredients</h4>
-          <ul>
+          <!-- Ingredients -->
+          <h4 class="subtitle">Ingredients</h4>
+          <ul class="custom-list">
             <li v-for="ing in adjustedIngredients" :key="ing.id">
               {{ ing.amount }} {{ ing.unit }} {{ ing.name }}
             </li>
           </ul>
 
-          <h4 class="mt-4">Steps</h4>
+          <!-- Steps -->
+          <h4 class="subtitle mt-4">Steps</h4>
           <b-list-group>
             <b-list-group-item
               v-for="step in steps"
@@ -51,9 +48,9 @@
               </b-form-checkbox>
             </b-list-group-item>
           </b-list-group>
-        </b-col>
-      </b-row>
-    </b-container>
+        </b-card>
+      </b-col>
+    </b-row>
   </div>
 </template>
 
@@ -63,27 +60,23 @@ export default {
   props: ["recipeId"],
   data() {
     return {
-      recipe: null,      // will receive data.details
-      steps: [],         // will receive data.steps
-      ingredients: [],   // recipe.ingredients
-      servings: null     // recipe.servings (or multiplier)
+      recipe: null,
+      steps: [],
+      ingredients: [],
+      servings: null
     };
   },
   async created() {
     try {
-      // call your BE GET /recipes/:id/progress
       const { data } = await window.axios.get(
         `${this.$root.store.server_domain}/recipes/${this.recipeId}/progress`
       );
-      // BE returns { steps, details, servings? } or { steps, details }
       this.steps       = data.steps || [];
       this.recipe      = data.details;
-      // fallback if BE didn’t send servings separately
       this.servings    = data.servings ?? this.recipe.servings;
       this.ingredients = this.recipe.ingredients || this.recipe.extendedIngredients || [];
     } catch (err) {
       console.error("Failed to load preparation data:", err);
-      // optionally redirect or show an error
       this.$router.replace({ name: "notFound" });
     }
   },
@@ -125,7 +118,20 @@ export default {
 </script>
 
 <style scoped>
-ul {
+.title {
+  font-size: 2.5rem;
+  font-weight: 600;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.subtitle {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.custom-list {
   margin-left: 1.5rem;
 }
 </style>

@@ -4,7 +4,7 @@
     <b-row class="justify-content-center">
       <b-col cols="12" md="10" lg="10" xl="8">
         <b-card class="transparent-card p-4">
-          <h1 class="title mb-4 text-center">Create New Recipe</h1>
+          <h1 class="title text-center">Create New Recipe</h1>
 
           <b-form @submit.prevent="onSubmit">
             <!-- 1) Recipe Type -->
