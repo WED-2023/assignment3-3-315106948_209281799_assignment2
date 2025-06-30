@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <NavBar :store="store" @logout="logout" />
+    <NavBar :store="store" @logout="logout" @openCreateRecipe="openModal" />
+    <CreateRecipeModal v-model:show="showModal" />
     <router-view />
   </div>
 </template>
@@ -9,13 +10,17 @@
 import { getCurrentInstance } from 'vue';
 import { useToast } from 'vue-toastification';
 import NavBar from './components/NavBar.vue';
+import CreateRecipeModal from "@/components/CreateRecipeModal.vue";
+
 
 export default {
   name: "App",
   components: {
-    NavBar
+    NavBar,
+    CreateRecipeModal
   },
-  setup() {
+
+  data() {
     const internalInstance = getCurrentInstance();
     const store = internalInstance.appContext.config.globalProperties.store;
     const router = internalInstance.appContext.config.globalProperties.$router;
@@ -27,8 +32,19 @@ export default {
       router.push("/").catch(() => {});
     };
 
-    return { store, logout };
-  }
+    return {
+      logout,
+      // store: this.$root.store
+      showModal: false
+    };  
+  },
+  methods: {
+    openModal() {
+      this.showModal = true;
+    }
+
+  },
+
 };
 </script>
 

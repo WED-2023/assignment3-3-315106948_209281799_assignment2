@@ -1,14 +1,16 @@
 <template>
-  <div class="card h-100">
     <!-- Clickable image wraps router-link -->
-    <router-link :to="{ name: 'recipe', params: { recipeId: recipe.id } }">
+    <router-link 
+    :to="{ name: 'recipe', params: { recipeId: recipe.id } }"
+    class="text-decoration-none text-dark"
+    >
+      <div class="card h-100 clickable">
       <img
         v-if="recipe.image"
         :src="recipe.image"
-        class="card-img-top recipe-image clickable"
+        class="card-img-top recipe-image"
         alt="Recipe image"
       />
-    </router-link>
 
     <div class="card-body text-center">
       <h5 class="card-title">{{ recipe.title }}</h5>
@@ -41,6 +43,7 @@
       </div>
     </div>
   </div>
+  </router-link>
 </template>
 
 <script>

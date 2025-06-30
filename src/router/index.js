@@ -45,11 +45,11 @@ const routes = [
     name: "familyRecipes",
     component: () => import("../pages/FamilyRecipesPage.vue"),
   },
-  {
-    path: "/create-recipe",
-    name: "createRecipe",
-    component: () => import("../pages/CreateRecipePage.vue"),
-  },
+  // {
+  //   path: "/create-recipe",
+  //   name: "createRecipe",
+  //   component: () => import("../components/CreateRecipeModal.vue"),
+  // },
   {
     path: "/prepare/:recipeId",
     name: "prepare",

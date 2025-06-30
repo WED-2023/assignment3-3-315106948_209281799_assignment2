@@ -40,7 +40,7 @@
             </b-nav-item-dropdown>
 
             <!-- Create New Recipe -->
-            <b-nav-item :to="{ name: 'createRecipe' }">
+            <b-nav-item @click="$emit('openCreateRecipe')" variant="success">
               Create New Recipe
             </b-nav-item>
 
@@ -63,6 +63,7 @@
 
 <script>
 export default {
+  emits: ['openCreateRecipe'],
   name: "NavBar",
   props: {
     store: {

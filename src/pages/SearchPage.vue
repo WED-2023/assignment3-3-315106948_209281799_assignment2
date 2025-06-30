@@ -121,6 +121,7 @@ export default {
     const showFilters = ref(false);
 
     const resultOptions = [
+      { value: 1, text: '1 results' },
       { value: 5, text: '5 results' },
       { value: 10, text: '10 results' },
       { value: 15, text: '15 results' },

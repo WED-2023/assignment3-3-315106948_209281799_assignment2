@@ -15,9 +15,9 @@ import { createRouter, createWebHistory } from 'vue-router';
 import 'bootstrap/dist/css/bootstrap.css';
 // import 'bootstrap/dist/js/bootstrap.bundle.js';
 
-// BootstrapVue 3
-import BootstrapVue3 from 'bootstrap-vue-3';
-import 'bootstrap-vue-3/dist/bootstrap-vue-3.css';
+import {BootstrapVue3, BModal} from 'bootstrap-vue-3';
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue-3/dist/bootstrap-vue-3.css'
 import { BContainer, BRow, BCol } from 'bootstrap-vue-3';
 import Vuelidate from '@vuelidate/core';
 import './assets/custom.css';
@@ -56,6 +56,7 @@ const app = createApp(App);
 app.use(router);
 app.use(VueAxios, axios);
 app.use(BootstrapVue3);
+app.component('BModal', BModal);
 app.use(Vuelidate); 
 app.use(Toast, {
   position: POSITION.TOP_RIGHT,

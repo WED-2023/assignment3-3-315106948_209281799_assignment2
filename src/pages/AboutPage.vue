@@ -21,9 +21,10 @@
 
       <h4 class="mt-4">Past Exercises</h4>
       <ul>
-        <li><a href="https://example.com/exercise1" target="_blank">Exercise 1 – Vue Basics</a></li>
-        <li><a href="https://example.com/exercise2" target="_blank">Exercise 2 – REST API Integration</a></li>
-        <li><a href="https://example.com/exercise3" target="_blank">Exercise 3 – Authentication and Sessions</a></li>
+        <li><a href="https://wed-2023.github.io/209281799/" target="_blank">Daniel's grandma website</a></li>
+        <li><a href="https://wed-2023.github.io/209281799/" target="_blank">Yuval's grandma website</a></li>
+        <li><a href="https://wed-2023.github.io/assignment2-315106948_209281799_assignment2/" target="_blank">"Spaceships Game" website</a></li>
+        <!-- <li><a href="https://example.com/exercise3" target="_blank">Exercise 3 – Authentication and Sessions</a></li> -->
       </ul>
     </b-card>
   </div>

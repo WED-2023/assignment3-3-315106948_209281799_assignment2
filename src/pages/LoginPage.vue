@@ -1,9 +1,9 @@
 <template>
-<b-container class="mt-5">
-  <b-row class="justify-content-center">
-    <b-col cols="12" md="8" lg="5">
+<b-container class="mt-5 login-wrapper" :class="{ embedded }">
+  <b-row :class="embedded ? '' : 'justify-content-center'">
+    <b-col :cols="embedded ? 12 : 12" :md="embedded ? 12 : 8" :lg="embedded ? 12 : 5">
       <b-card class="transparent-card p-4">
-            <h1 class="mb-4">Login</h1>
+        <h1 class="mb-4">Login</h1>
 
 
     <b-form @submit.prevent="login">
@@ -73,6 +73,12 @@ import { useToast } from 'vue-toastification';
 
 export default {
   name: 'LoginPage',
+  props: {
+    embedded: {
+      type: Boolean,
+      default: false
+    }
+  },
   setup() {
     const router = useRouter();
     const toast = useToast();
@@ -128,3 +134,8 @@ export default {
   },
 };
 </script>
+<style scoped>
+/* .login-wrapper {
+  width: 100%;
+} */
+</style>
