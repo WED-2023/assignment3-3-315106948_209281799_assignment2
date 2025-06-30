@@ -51,6 +51,26 @@
                 </b-form-checkbox>
               </b-list-group-item>
             </b-list-group>
+
+            <!-- Progress Bar -->
+            <div class="mt-4">
+              <h4 class="subtitle">Progress</h4>
+              <b-progress
+                :value="progressPercent"
+                max="100"
+                show-progress
+                animated
+                height="2rem"
+                variant="success"
+              ></b-progress>
+            </div>
+
+            <!-- Save Progress Button -->
+            <div class="mt-3 text-center">
+              <b-button variant="primary" @click="saveProgress">
+                Save Progress
+              </b-button>
+            </div>
           </div>
 
         </b-card>
@@ -58,7 +78,6 @@
     </b-row>
   </div>
 </template>
-
 
 <script>
 export default {
@@ -94,6 +113,11 @@ export default {
         ...ing,
         amount: (ing.amount * factor).toFixed(2)
       }));
+    },
+    progressPercent() {
+      if (!this.steps.length) return 0;
+      const doneCount = this.steps.filter(s => s.isDone).length;
+      return Math.round((doneCount / this.steps.length) * 100);
     }
   },
   methods: {
@@ -118,30 +142,44 @@ export default {
       } catch (err) {
         console.error("Could not update servings:", err);
       }
+    },
+    async saveProgress() {
+      try {
+        await window.axios.post(
+          `${this.$root.store.server_domain}/recipes/${this.recipeId}/progress`,
+          {
+            steps: this.steps.map(s => ({ number: s.number, isDone: s.isDone })),
+            multiplier: this.servings / this.recipe.servings
+          }
+        );
+        console.log("Progress saved successfully!");
+        this.$router.push({ name: "mealPlan" });
+      } catch (err) {
+        console.error("Could not save progress:", err);      }
     }
   }
 };
 </script>
 
 <style scoped>
-
-
 .subtitle {
   font-size: 1.5rem;
-  font-weight: 500;
+  font-weight: 600;
   margin-top: 2rem;
   margin-bottom: 1rem;
-  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-  font-weight: 600;
-
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
-.custom-list, .list-group-item {
+.custom-list,
+.list-group-item {
   margin-left: 1.5rem;
-  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   font-size: 1rem;
-
-  /* font-weight: 600; */
 }
 
+/* tighten up the progress section */
+.mt-4 h4.subtitle {
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
 </style>

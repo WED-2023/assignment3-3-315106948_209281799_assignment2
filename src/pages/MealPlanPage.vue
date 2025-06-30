@@ -1,4 +1,3 @@
-<!-- src/pages/MealPlanPage.vue -->
 <template>
   <div class="container mt-4">
     <b-row class="justify-content-center">
@@ -6,16 +5,13 @@
         <b-card class="transparent-card p-4">
           <h1 class="title text-center mb-4">My Meal Plan</h1>
 
-          <b-button variant="danger" size="sm" @click="clearPlan" class="mb-3">
-            Clear Meal Plan
-          </b-button>
-
           <b-list-group>
             <b-list-group-item
               v-for="(item, idx) in plan"
               :key="item.recipe.id"
               class="d-flex justify-content-between align-items-center flex-wrap"
             >
+              <!-- Left: reorder + title -->
               <div class="d-flex align-items-center">
                 <b-button
                   size="sm"
@@ -30,13 +26,30 @@
                   @click="moveDown(idx)"
                   :disabled="idx === plan.length - 1"
                 >↓</b-button>
-                <router-link
+                <!-- <router-link
                   :to="{ name: 'recipe', params: { recipeId: item.recipe.id } }"
                   class="ms-3"
                 >
                   {{ idx + 1 }}. {{ item.recipe.title }}
-                </router-link>
+                </router-link> -->
+                <div class="ms-3">
+                  <router-link
+                    :to="{ name: 'recipe', params: { recipeId: item.recipe.id } }"
+                    class="d-block"
+                  >
+                    {{ idx + 1 }}. {{ item.recipe.title }}
+                  </router-link>
+                  <b-progress
+                    :value="item.progressPercent"
+                    max="100"
+                    height="0.6rem"
+                    variant="success"
+                    class="mt-1"
+                  ></b-progress>
+                </div>
               </div>
+
+              <!-- Right: progress, prepare, remove -->
               <div class="d-flex align-items-center mt-2 mt-md-0">
                 <b-progress
                   :value="item.progressPercent"
@@ -44,6 +57,16 @@
                   height="1rem"
                   class="me-3 flex-grow-1"
                 />
+
+                <b-button
+                  size="sm"
+                  variant="outline-primary"
+                  class="me-2"
+                  @click="goToPreparation(item.recipe.id)"
+                >
+                  Prepare
+                </b-button>
+
                 <b-button
                   size="sm"
                   variant="outline-danger"
@@ -54,6 +77,21 @@
               </div>
             </b-list-group-item>
           </b-list-group>
+
+          <!-- Bottom area: clear button or empty message -->
+          <div class="mt-4 text-center">
+            <b-button
+              v-if="plan.length > 0"
+              variant="danger"
+              size="sm"
+              @click="clearPlan"
+            >
+              Clear Meal Plan
+            </b-button>
+            <p v-else class="no-data">
+              No recipes in your upcoming meal plan.
+            </p>
+          </div>
         </b-card>
       </b-col>
     </b-row>
@@ -80,7 +118,7 @@ export default {
           const { data: prog } = await window.axios.get(
             `${this.$root.store.server_domain}/recipes/${preview.id}/progress`
           );
-          const doneCount = prog.steps.filter(s => s.completed).length;
+          const doneCount = prog.steps.filter(s => s.isDone).length;
           const totalCount = prog.steps.length || 1;
           return {
             recipe: preview,
@@ -131,13 +169,30 @@ export default {
         `${this.$root.store.server_domain}/recipes/meal-plan/clear`
       );
       this.plan = [];
+    },
+    goToPreparation(recipeId) {
+      this.$router.push({ name: "prepare", params: { recipeId } });
     }
   }
 };
 </script>
 
 <style scoped>
+
+/* b-list-group-item {
+  padding: 1rem;
+} */
 b-list-group-item {
   padding: 1rem;
+  align-items: flex-start;
+}
+b-progress {
+  min-width: 120px;
+}
+
+.no-data {
+  font-style: italic;
+  color: #888;
+  margin: 0;
 }
 </style>

@@ -13,9 +13,6 @@
 
         <!-- Prepare & Meal-Plan Buttons -->
         <div class="mb-4 text-center">
-          <b-button variant="primary" class="me-2" @click="goToPreparation">
-            Prepare Recipe
-          </b-button>
           <b-button variant="outline-primary" @click="addToMealPlan">
             Add to Upcoming Meal
           </b-button>
@@ -77,10 +74,6 @@ onMounted(async () => {
     router.replace({ name: "notFound" });
   }
 });
-
-function goToPreparation() {
-  router.push({ name: "prepare", params: { recipeId } });
-}
 
 async function addToMealPlan() {
   try {

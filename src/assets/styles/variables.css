@@ -1,0 +1,15 @@
+:root {
+  /* colors */
+  --color-primary: #0056b3;
+  --color-primary-hover: #004494;
+  --color-secondary: #3d5eb3;
+  --color-bg: #eaedf5;
+  /* typography */
+  --font-base: 'Franklin Gothic Medium','Arial Narrow',Arial,sans-serif;
+  /* spacing scale */
+  --space-sm: .5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  /* borders */
+  --radius: 0.75rem;
+}

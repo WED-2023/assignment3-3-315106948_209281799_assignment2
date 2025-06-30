@@ -4,14 +4,6 @@
 
     <h1 class="title text-center">Main Page</h1>
 
-    <div>
-  <b-button v-b-modal.modal-1>Launch demo modal</b-button>
-
-  <b-modal id="modal-1" title="BootstrapVue">
-    <p class="my-4">Hello from modal!</p>
-  </b-modal>
-</div>
-
     <b-row>
       <!-- Column 1: Random Recipes -->
       <b-col md="6">
@@ -65,7 +57,8 @@ export default {
     const store = internalInstance.appContext.config.globalProperties.store;
     
     const randomRecipes = ref([]);
-    
+    const lastViewedRecipes = ref([]);
+
     const loadRandomRecipes = async () => {
       try {
         const res = await window.axios.get('/recipes/random');
@@ -76,10 +69,22 @@ export default {
       }
     };
 
+    const loadLastViewed = async () => {
+      if (!store.username) return;
+      try {
+        const { data } = await window.axios.get(`/user/watched`);
+        lastViewedRecipes.value = data || [];
+      } catch (e) {
+        console.error('Failed loading last viewed:', e);
+      }
+    };
+
     onMounted(() => {
       loadRandomRecipes();
+      loadLastViewed();
     });
-    return { store, randomRecipes, loadRandomRecipes };
+
+    return { store, randomRecipes, loadRandomRecipes , lastViewedRecipes, loadLastViewed };
   }
 };
 </script>

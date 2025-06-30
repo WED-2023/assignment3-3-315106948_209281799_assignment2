@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <NavBar :store="store" @logout="logout" @openCreateRecipe="openModal" />
-    <CreateRecipeModal v-model:show="showModal" />
+    <CreateRecipeModal v-model="showModal" />
     <router-view />
   </div>
 </template>

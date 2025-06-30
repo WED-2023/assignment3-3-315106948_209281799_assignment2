@@ -20,7 +20,7 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue-3/dist/bootstrap-vue-3.css'
 import { BContainer, BRow, BCol } from 'bootstrap-vue-3';
 import Vuelidate from '@vuelidate/core';
-import './assets/custom.css';
+import './assets/styles/custom.css';
 
 
 // Router setup
