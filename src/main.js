@@ -23,7 +23,6 @@ import Vuelidate from '@vuelidate/core';
 import './assets/custom.css';
 
 
-
 // Router setup
 const router = createRouter({
   history: createWebHistory(),

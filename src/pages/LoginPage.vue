@@ -36,7 +36,7 @@
 
       <b-button type="submit" variant="primary" class="w-100">Login</b-button>
 
-      <b-alert
+      <!-- <b-alert
         variant="danger"
         class="mt-3"
         dismissible
@@ -44,7 +44,14 @@
         show
       >
         Login failed: {{ state.submitError }}
-      </b-alert>
+      </b-alert> -->
+
+      <b-form-invalid-feedback
+        v-if="state.submitError"
+        class="d-block mt-3 text-danger"
+      >
+        {{ state.submitError }}
+      </b-form-invalid-feedback>
 
       <div class="mt-2">
         Don’t have an account?

@@ -4,6 +4,7 @@
 
     <h1 class="title text-center">Main Page</h1>
     <b-row>
+      <!-- Column 1: Random Recipes -->
       <b-col>
         <RecipePreviewList 
         title="Random Recipes" 
@@ -13,24 +14,23 @@
         <div class="text-center mt-2">
           <b-button
             variant="outline-primary"
-            @click="loadRandomRecipes">More random recipes</b-button>
+            @click="loadRandomRecipes">🔄 Reload
+          </b-button>
         </div>
       </b-col>
 
+      <!-- Column 2: Login or Last Viewed -->
       <b-col>
-        <div v-if="!store.username" class="text-center mt-4">
-          <router-link :to="{ name: 'login' }">
-            <button class="btn btn-primary">You need to Login to view this</button>
-          </router-link>
-        </div>
+          <!-- show login form to guests -->
+          <LoginPage v-if="!store.username" />
 
-        <RecipePreviewList
-          title="Last Viewed Recipes"
-          :blur="!store.username" 
-          class="RandomRecipes center"
-          disabled
-        />
-
+          <!-- show last‐viewed list to authenticated users -->
+          <RecipePreviewList
+            v-else
+            title="Last Viewed Recipes"
+            :recipes="lastViewedRecipes"
+            class="RandomRecipes center"
+          />
       </b-col>
     </b-row>
     </b-card> 
@@ -40,10 +40,12 @@
 <script>
 import { getCurrentInstance, ref, onMounted } from 'vue';
 import RecipePreviewList from "../components/RecipePreviewList.vue";
+import LoginPage from './LoginPage.vue';
 
 export default {
   components: {
-    RecipePreviewList
+    RecipePreviewList,
+    LoginPage
   },
   setup() {
     const internalInstance = getCurrentInstance();

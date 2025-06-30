@@ -32,6 +32,9 @@
               >
                 {{ errorMessageForUsername }}
               </b-form-invalid-feedback>
+              <b-form-text class="text-muted">
+                Username must be 3–8 characters, letters only.
+              </b-form-text>
             </b-form-group>
 
             <!-- First Name -->
@@ -158,7 +161,6 @@ import {
   maxLength,
   alpha,
   sameAs,
-  // helpers,
 } from '@vuelidate/validators';
 import rawCountries from '../assets/countries';
 import { computed, reactive } from 'vue';
@@ -184,14 +186,6 @@ export default {
 
     const passwordRef = computed(() => state.password);
 
-    // Only accept digits anywhere in the string
-    // const hasNumber = helpers.regex('hasNumber', /.*\d.*/);
-    // // Only accept one of these special chars anywhere in the string
-    // const hasSpecialChar = helpers.regex(
-    //   'hasSpecialChar',
-    //   /.*[!@#$%^&*(),.?":{}|<>].*/
-    // );
-
     const rules = {
       username: {
         required,
@@ -206,8 +200,9 @@ export default {
         required,
         minLength: minLength(5),
         maxLength: maxLength(10),
-        // hasNumber,
-        // hasSpecialChar,
+        hasNumber: (value) => /\d/.test(value), // Check for at least one digit
+        hasSpecialChar: (value) =>
+          /[!@#$%^&*(),.?":{}|<>]/.test(value), // Check for at least one special character
       },
       confirmedPassword: {
         required,
@@ -223,6 +218,9 @@ export default {
       return !field.$invalid;
     };
 
+    // Not using spesific error messages for each field
+    // but rather a summary of all requirments
+    // leaving this here for reference or future use
     const errorMessageForUsername = computed(() => {
       const username = v$.value.username;
       if (username.required === false) return 'Username is required.';
@@ -279,19 +277,19 @@ export default {
       v$.value.$touch();
       
       // 🔍 DEBUG LOGGING
-      const pw = v$.value.password;
-      console.log('🛠️ Password debug — raw value:', state.password);
-      console.log('   • required invalid?      ', pw.required.$invalid);
-      console.log('   • minLength(5) invalid?  ', pw.minLength.$invalid);
-      console.log('   • maxLength(10) invalid? ', pw.maxLength.$invalid);
-      console.log('   • hasNumber invalid?     ', pw.hasNumber.$invalid);
-      console.log('   • hasSpecialChar invalid?', pw.hasSpecialChar.$invalid);
-      console.log(
-        '   • overall invalid?       ',
-        pw.$invalid,
-        '| failed validators:',
-        pw.$errors.map(e => e.$validator)
-      );
+      // const pw = v$.value.password;
+      // console.log('🛠️ Password debug — raw value:', state.password);
+      // console.log('   • required invalid?      ', pw.required.$invalid);
+      // console.log('   • minLength(5) invalid?  ', pw.minLength.$invalid);
+      // console.log('   • maxLength(10) invalid? ', pw.maxLength.$invalid);
+      // console.log('   • hasNumber invalid?     ', pw.hasNumber.$invalid);
+      // console.log('   • hasSpecialChar invalid?', pw.hasSpecialChar.$invalid);
+      // console.log(
+      //   '   • overall invalid?       ',
+      //   pw.$invalid,
+      //   '| failed validators:',
+      //   pw.$errors.map(e => e.$validator)
+      // );
 
       const valid = await v$.value.$validate();
       if (!valid) {
@@ -312,6 +310,7 @@ export default {
       } catch (err) {
         state.submitError =
           err.response?.data?.message || 'Unexpected error.';
+        console.error('🚨 Registration failed:', state.submitError);
       }
     };
 
