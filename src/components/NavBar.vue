@@ -16,7 +16,7 @@
         <b-navbar-nav class="ms-auto">
           <!-- Guest -->
           <template v-if="!store.username">
-            <b-nav-item disabled style="color: grey" >Hello Guest</b-nav-item>
+            <b-nav-item class="nav-greeting" href="javascript:void(0)">Hello Guest</b-nav-item>
             <b-nav-item :to="{ name: 'login' }">Login</b-nav-item>
             <b-nav-item :to="{ name: 'register' }">Register</b-nav-item>
           </template>
@@ -24,7 +24,7 @@
           <!-- Logged-in -->
           <template v-else>
             <!-- Greeting -->
-            <b-nav-item disabled>Hello, {{ store.username }}</b-nav-item>
+            <b-nav-item class="nav-greeting" href="javascript:void(0)">Hello, {{ store.username }}</b-nav-item>
 
             <!-- Personal Area dropdown -->
             <b-nav-item-dropdown text="Personal Area" right>
@@ -62,7 +62,7 @@
 
 <script>
 export default {
-  emits: ['openCreateRecipe'],
+  emits: ['openCreateRecipe', 'logout'],
   name: "NavBar",
   props: {
     store: {
@@ -79,18 +79,22 @@ nav.navbar {
   border-radius: 12px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
   backdrop-filter: blur(10px);
-  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-  font-weight:100;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-weight: 100;
   font-size: 1.2rem;
 }
 
 .navbar-brand {
   font-size: 2rem;
-  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   font-weight: 800;
   letter-spacing: 1px;
 }
 
-
-
+.nav-greeting {
+  color: #ddd !important;
+  pointer-events: none;
+  opacity: 1 !important;
+  cursor: default;
+}
 </style>

@@ -27,8 +27,14 @@ export default {
     const toast = useToast();
 
     const logout = () => {
-      store.logout();
-      toast.success("User logged out successfully");
+      try{
+        window.axios.post("/logout");
+        store.logout();
+        toast.success("User logged out successfully");
+      } catch (err) {
+        console.error("Logout failed:", err);
+        toast.error("Failed to log out. Please try again.");
+      }
       router.push("/").catch(() => {});
     };
 
