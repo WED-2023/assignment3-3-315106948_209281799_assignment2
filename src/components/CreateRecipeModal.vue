@@ -1,5 +1,6 @@
 <!-- src/components/CreateRecipeModal.vue -->
 <template>
+  
   <b-modal
     :model-value="modelValue"
     @update:model-value="$emit('update:modelValue', $event)"
@@ -27,13 +28,12 @@
           </b-form-group>
         </b-col>
         <b-col md="6">
-          <b-form-group label="Upload Image" label-for="image">
-            <input
-              type="file"
+          <b-form-group label="Image URL" label-for="image">
+            <b-form-input
               id="image"
-              @change="onFileChange"
-              accept="image/*"
-              class="form-control"
+              v-model="form.image"
+              type="url"
+              placeholder="https://example.com/image.jpg"
               required
             />
           </b-form-group>
@@ -257,6 +257,15 @@
         Create Recipe
       </b-button>
     </b-form>
+    <b-alert
+      v-if="errorMessage"
+      variant="danger"
+      class="mt-3"
+      show
+    >
+      {{ errorMessage }}
+    </b-alert>
+
   </b-modal>
 </template>
 
@@ -272,7 +281,7 @@ export default {
       form: {
         type: "personal",
         title: "",
-        imageFile: null,
+        image: null,
         readyInMinutes: null,
         servings: null,
         vegan: false,
@@ -297,8 +306,9 @@ export default {
         ingredients: [{ name: "", amount: null, unit: "" }],
         origin_person: "",
         occasion: "",
-        story: ""
+        story: "",
       },
+      errorMessage: "",
       typeOptions: [
         { value: "personal", text: "Personal Recipe" },
         { value: "family", text: "Family Recipe" }
@@ -306,96 +316,65 @@ export default {
     };
   },
   methods: {
-    async onSubmit() {
-      this.$emit('update:modelValue', false);
-      // const payload = {
-      //   ...this.form,
-      //   instructions: this.form.instructions.filter(i => i.trim()),
-      //   ingredients: this.form.ingredients.filter(i => i.name.trim())
-      // };
+  async onSubmit() {
+  this.errorMessage = ""; // Reset error message
 
-      //update to upload image from computer
-      const formData = new FormData();
-      
-      if (this.form.imageFile instanceof File) {
-        formData.append("image", this.form.imageFile);
+  const instructions = this.form.instructions.filter(i => i.trim());
+  const ingredients = this.form.ingredients.filter(i => i.name.trim());
+
+  const payload = {
+    ...this.form,
+    image: this.form.image || null,
+    instructions,
+    ingredients
+  };
+
+  try {
+    const endpoint = this.form.type === "personal"
+      ? "/user/myRecipes"
+      : "/user/familyRecipes";
+
+    const response = await window.axios.post(endpoint, payload, {
+      headers: {
+        'Content-Type': 'application/json'
       }
+    });
 
-      formData.append("type", this.form.type);
-      formData.append("title", this.form.title);
-      formData.append("readyInMinutes", this.form.readyInMinutes);
-      formData.append("servings", this.form.servings);
-      formData.append("vegan", this.form.vegan);
-      formData.append("vegetarian", this.form.vegetarian);
-      formData.append("glutenFree", this.form.glutenFree);
-      formData.append("dairyFree", this.form.dairyFree);
-      formData.append("veryHealthy", this.form.veryHealthy);
-      formData.append("cheap", this.form.cheap);
-      formData.append("veryPopular", this.form.veryPopular);
-      formData.append("sustainable", this.form.sustainable);
-      formData.append("lowFodmap", this.form.lowFodmap);
-      formData.append("weightWatcherSmartPoints", this.form.weightWatcherSmartPoints);
-      formData.append("gaps", this.form.gaps);
-      formData.append("healthScore", this.form.healthScore);
-      formData.append("pricePerServing", this.form.pricePerServing);
-      formData.append("summary", this.form.summary);
+    console.log("✅ Response from server:", response.data);
 
-      const instructions = this.form.instructions.filter(i => i.trim());
-      const ingredients = this.form.ingredients.filter(i => i.name.trim());
+    //close the modal only after successful creation
+    this.$emit('update:modelValue', false);
 
-      formData.append("instructions", JSON.stringify(instructions));
-      formData.append("ingredients", JSON.stringify(ingredients));
+    //send the created recipe back to the parent component
+    this.$emit("recipeCreated", response.data);
 
-      formData.append("origin_person", this.form.origin_person);
-      formData.append("occasion", this.form.occasion);
-      formData.append("story", this.form.story);
+  } catch (err) {
+    console.error("❌ Failed to create recipe:", err);
 
-      for (const [key, value] of formData.entries()) {
-        console.log(`🧾 ${key}:`, value);
-      }
-
-      try {
-        const endpoint = this.form.type === "personal" ? "/user/myRecipes" : "/user/familyRecipes";
-        const response = await window.axios.post(endpoint, formData, {
-
-        // if (this.form.type === "personal") {
-        //   await window.axios.post("/user/myRecipes", formData, {
-        //     headers: {
-        //       'Content-Type': 'multipart/form-data'
-        //     }        
-        //   }
-        // );
-        // }
-        // else {
-        //   await window.axios.post("/user/familyRecipes", formData, {
-        //     headers: {
-        //       'Content-Type': 'multipart/form-data'
-        //     }}
-          });
-      console.log("✅ Response from server:", response.data);
-      alert("✅ recipe created successfully!");
-
-      } catch (err) {
-        console.error("Failed to create recipe:", err);
-        alert("❌ Failed to create recipe. Please try again.");
-      }
-    },
-    addInstruction() {
-      this.form.instructions.push("");
-    },
-    removeInstruction(index) {
-      this.form.instructions.splice(index, 1);
-    },
-    addIngredient() {
-      this.form.ingredients.push({ name: "", amount: null, unit: "" });
-    },
-    removeIngredient(index) {
-      this.form.ingredients.splice(index, 1);
-    },
-    onFileChange(event) {
-      this.form.imageFile = event.target.files[0];
+    //show error message in the modal
+    if (err.response && err.response.data) {
+      this.errorMessage = err.response.data;
+    } else {
+      this.errorMessage = "An unknown error occurred.";
     }
 
   }
+},
+
+  addInstruction() {
+    this.form.instructions.push("");
+  },
+  removeInstruction(index) {
+    this.form.instructions.splice(index, 1);
+  },
+  addIngredient() {
+    this.form.ingredients.push({ name: "", amount: null, unit: "" });
+  },
+  removeIngredient(index) {
+    this.form.ingredients.splice(index, 1);
+  },
+
+}
+  
 };
 </script>
