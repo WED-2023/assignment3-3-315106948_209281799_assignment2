@@ -24,7 +24,6 @@
         <li><a href="https://wed-2023.github.io/209281799/" target="_blank">Daniel's grandma website</a></li>
         <li><a href="https://wed-2023.github.io/315106948/" target="_blank">Yuval's elderly website</a></li>
         <li><a href="https://wed-2023.github.io/assignment2-315106948_209281799_assignment2/" target="_blank">"Spaceships Game" website</a></li>
-        <!-- <li><a href="https://example.com/exercise3" target="_blank">Exercise 3 – Authentication and Sessions</a></li> -->
       </ul>
     </b-card>
   </div>

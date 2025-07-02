@@ -27,11 +27,13 @@
           </b-form-group>
         </b-col>
         <b-col md="6">
-          <b-form-group label="Image URL" label-for="image">
-            <b-form-input
+          <b-form-group label="Upload Image" label-for="image">
+            <input
+              type="file"
               id="image"
-              type="url"
-              v-model="form.image"
+              @change="onFileChange"
+              accept="image/*"
+              class="form-control"
               required
             />
           </b-form-group>
@@ -270,7 +272,7 @@ export default {
       form: {
         type: "personal",
         title: "",
-        image: "",
+        imageFile: null,
         readyInMinutes: null,
         servings: null,
         vegan: false,
@@ -306,19 +308,76 @@ export default {
   methods: {
     async onSubmit() {
       this.$emit('update:modelValue', false);
-      const payload = {
-        ...this.form,
-        instructions: this.form.instructions.filter(i => i.trim()),
-        ingredients: this.form.ingredients.filter(i => i.name.trim())
-      };
+      // const payload = {
+      //   ...this.form,
+      //   instructions: this.form.instructions.filter(i => i.trim()),
+      //   ingredients: this.form.ingredients.filter(i => i.name.trim())
+      // };
+
+      //update to upload image from computer
+      const formData = new FormData();
+      
+      if (this.form.imageFile instanceof File) {
+        formData.append("image", this.form.imageFile);
+      }
+
+      formData.append("type", this.form.type);
+      formData.append("title", this.form.title);
+      formData.append("readyInMinutes", this.form.readyInMinutes);
+      formData.append("servings", this.form.servings);
+      formData.append("vegan", this.form.vegan);
+      formData.append("vegetarian", this.form.vegetarian);
+      formData.append("glutenFree", this.form.glutenFree);
+      formData.append("dairyFree", this.form.dairyFree);
+      formData.append("veryHealthy", this.form.veryHealthy);
+      formData.append("cheap", this.form.cheap);
+      formData.append("veryPopular", this.form.veryPopular);
+      formData.append("sustainable", this.form.sustainable);
+      formData.append("lowFodmap", this.form.lowFodmap);
+      formData.append("weightWatcherSmartPoints", this.form.weightWatcherSmartPoints);
+      formData.append("gaps", this.form.gaps);
+      formData.append("healthScore", this.form.healthScore);
+      formData.append("pricePerServing", this.form.pricePerServing);
+      formData.append("summary", this.form.summary);
+
+      const instructions = this.form.instructions.filter(i => i.trim());
+      const ingredients = this.form.ingredients.filter(i => i.name.trim());
+
+      formData.append("instructions", JSON.stringify(instructions));
+      formData.append("ingredients", JSON.stringify(ingredients));
+
+      formData.append("origin_person", this.form.origin_person);
+      formData.append("occasion", this.form.occasion);
+      formData.append("story", this.form.story);
+
+      for (const [key, value] of formData.entries()) {
+        console.log(`🧾 ${key}:`, value);
+      }
+
       try {
-        if (payload.type === "personal") {
-          await window.axios.post("/user/myRecipes", payload);
-        } else {
-          await window.axios.post("/user/familyRecipes", payload);
-        }
+        const endpoint = this.form.type === "personal" ? "/user/myRecipes" : "/user/familyRecipes";
+        const response = await window.axios.post(endpoint, formData, {
+
+        // if (this.form.type === "personal") {
+        //   await window.axios.post("/user/myRecipes", formData, {
+        //     headers: {
+        //       'Content-Type': 'multipart/form-data'
+        //     }        
+        //   }
+        // );
+        // }
+        // else {
+        //   await window.axios.post("/user/familyRecipes", formData, {
+        //     headers: {
+        //       'Content-Type': 'multipart/form-data'
+        //     }}
+          });
+      console.log("✅ Response from server:", response.data);
+      alert("✅ recipe created successfully!");
+
       } catch (err) {
         console.error("Failed to create recipe:", err);
+        alert("❌ Failed to create recipe. Please try again.");
       }
     },
     addInstruction() {
@@ -332,7 +391,11 @@ export default {
     },
     removeIngredient(index) {
       this.form.ingredients.splice(index, 1);
+    },
+    onFileChange(event) {
+      this.form.imageFile = event.target.files[0];
     }
+
   }
 };
 </script>

@@ -1,19 +1,42 @@
 <template>
     <!-- Clickable image wraps router-link -->
-    <router-link 
+    <!-- <router-link 
     :to="{ name: 'recipe', params: { recipeId: recipe.id } }"
     class="text-decoration-none text-dark"
+    > -->
+    <div class="card h-100 ">
+
+    <router-link 
+      :to="{ name: 'recipe', params: { recipeId: recipe.id } }"
+        class="recipe-link"
     >
-      <div class="card h-100 clickable">
       <img
         v-if="recipe.image"
         :src="recipe.image"
         class="card-img-top recipe-image"
         alt="Recipe image"
       />
+    </router-link>
 
     <div class="card-body text-center">
-      <h5 class="card-title">{{ recipe.title }}</h5>
+
+
+      <router-link 
+        :to="{ name: 'recipe', params: { recipeId: recipe.id } }"
+          class="recipe-link"
+      >
+        <h5 class="card-title">{{ recipe.title }}</h5>
+      </router-link>
+
+      <!-- <img
+        v-if="recipe.image"
+        :src="recipe.image"
+        class="card-img-top recipe-image"
+        alt="Recipe image"
+      /> -->
+
+    <!-- <div class="card-body text-center">
+      <h5 class="card-title">{{ recipe.title }}</h5> -->
       <p class="card-text">{{ recipe.readyInMinutes }} minutes</p>
 
       <!-- Dietary badges -->
@@ -43,7 +66,6 @@
       </div>
     </div>
   </div>
-  </router-link>
 </template>
 
 <script>
@@ -127,4 +149,17 @@ export default {
 .favorite-badge {
   cursor: pointer;
 }
+router-link {
+  display: block;
+}
+.recipe-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.recipe-link:hover .card-title {
+  text-decoration: underline;
+}
+
 </style>

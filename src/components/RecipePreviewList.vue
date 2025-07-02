@@ -1,7 +1,7 @@
 <template>
   <b-container fluid class="my-4">
     <b-card class="custom-card p-4">
-      <h3 class="mb-4">{{ title }}</h3>
+      <h4 class="subtitle mt-4">{{ title }}</h4>
 
       <div class="recipe-list" :class="[displayMode, { blur: blur }]">
         <RecipePreview
@@ -83,6 +83,27 @@ export default {
   pointer-events: none;
   user-select: none;
   opacity: 0.8;
+}
+
+.subtitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.custom-list,
+.list-group-item {
+  margin-left: 1.5rem;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-size: 1rem;
+}
+
+/* tighten up the progress section */
+.mt-4 h4.subtitle {
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
 }
 
 </style>

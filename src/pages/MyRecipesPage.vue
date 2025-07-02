@@ -1,9 +1,9 @@
 <!-- src/pages/MyRecipesPage.vue -->
 <template>
   <div class="container mt-4">
+    <b-card class="transparent-card p-4">
     <b-row class="justify-content-center">
-      <b-col cols="12" md="10" lg="10" xl="8">
-        <b-card class="transparent-card p-4">
+      <b-col cols="12" md="10" >
           <h1 class="title text-center">My Recipes</h1>
 
 <!-- <template>
@@ -11,7 +11,7 @@
     <h1>My Recipes</h1> -->
 
           <div v-if="recipes.length === 0" class="text-center mt-4">
-            <p>You haven’t created any recipes yet.</p>
+            <p>You haven't created any recipes yet.</p>
           </div>
 
           <b-row v-else class="g-4">
@@ -26,9 +26,9 @@
               <RecipePreview :recipe="recipe" />
             </b-col>
           </b-row>
-        </b-card>
       </b-col>
     </b-row>
+    </b-card>
   </div>
 </template>
 

@@ -16,7 +16,10 @@
         <b-navbar-nav class="ms-auto">
           <!-- Guest -->
           <template v-if="!store.username">
-            <b-nav-item class="nav-greeting" href="javascript:void(0)">Hello Guest</b-nav-item>
+            <!-- <b-nav-item class="nav-greeting" href="javascript:void(0)">Hello Guest</b-nav-item> -->
+            <li class="nav-item nav-greeting">
+              <span class="nav-link disabled">Hello Guest</span>
+            </li>
             <b-nav-item :to="{ name: 'login' }">Login</b-nav-item>
             <b-nav-item :to="{ name: 'register' }">Register</b-nav-item>
           </template>
@@ -24,7 +27,10 @@
           <!-- Logged-in -->
           <template v-else>
             <!-- Greeting -->
-            <b-nav-item class="nav-greeting" href="javascript:void(0)">Hello, {{ store.username }}</b-nav-item>
+            <!-- <b-nav-item class="nav-greeting" href="javascript:void(0)">Hello, {{ store.username }}</b-nav-item> -->
+            <li class="nav-item nav-greeting">
+              <span class="nav-link disabled">Hello, {{ store.username }}</span>
+            </li>
 
             <!-- Personal Area dropdown -->
             <b-nav-item-dropdown text="Personal Area" right>
@@ -91,10 +97,14 @@ nav.navbar {
   letter-spacing: 1px;
 }
 
-.nav-greeting {
-  color: #ddd !important;
+.nav-greeting,
+.nav-link,
+.nav-greeting.nav-link {
+  color: #8f8b8b !important;
   pointer-events: none;
   opacity: 1 !important;
   cursor: default;
 }
+
+
 </style>

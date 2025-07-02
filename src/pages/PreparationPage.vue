@@ -1,8 +1,8 @@
 <template>
   <div class="container mt-4">
+    <b-card class="transparent-card p-4">
     <b-row class="justify-content-center">
-      <b-col cols="12" md="10" lg="10" xl="8">
-        <b-card class="transparent-card p-4">
+      <b-col cols="12" md="10" >
 
           <!-- Loading recipe -->
           <div v-if="!recipe" class="text-center py-5">
@@ -24,7 +24,7 @@
                 class="ms-3"
                 @click="multiplyServings"
               >
-                ×2
+                x2
               </b-button>
             </div>
 
@@ -73,9 +73,9 @@
             </div>
           </div>
 
-        </b-card>
       </b-col>
     </b-row>
+    </b-card>
   </div>
 </template>
 

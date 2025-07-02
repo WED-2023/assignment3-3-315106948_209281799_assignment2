@@ -1,8 +1,9 @@
 <template>
   <div class="container mt-4">
+    <b-card class="transparent-card p-4">
+
     <b-row class="justify-content-center">
-      <b-col cols="12" md="10" lg="10" xl="8">
-        <b-card class="transparent-card p-4">
+      <b-col cols="12" md="10">
           <h1 class="title text-center">Search Recipes</h1>
 
           <!-- Inline search + toggle -->
@@ -93,9 +94,9 @@
           <div v-else-if="searchPerformed" class="text-center text-muted py-4">
             No results found for “{{ searchQuery }}.”
           </div>
-        </b-card>
       </b-col>
     </b-row>
+    </b-card>
   </div>
 </template>
 
