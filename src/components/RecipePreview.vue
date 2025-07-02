@@ -13,7 +13,7 @@
       <img
         v-if="recipe.image"
         :src="recipe.image"
-        class="card-img-top recipe-image"
+        class="card-img-top recipe-image fixed-image"
         alt="Recipe image"
       />
     </router-link>
@@ -117,7 +117,8 @@ export default {
   transform: translateY(-5px);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
-.recipe-image {
+.recipe-image, .fixed-image {
+  aspect-ratio: 16 / 9;
   width: 100%;
   height: 150px;
   object-fit: cover;

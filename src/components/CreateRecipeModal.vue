@@ -238,17 +238,18 @@
               <b-form-input
                 id="originPerson"
                 v-model="form.origin_person"
+                required
               />
             </b-form-group>
           </b-col>
           <b-col md="6">
             <b-form-group label="Occasion" label-for="occasion">
-              <b-form-input id="occasion" v-model="form.occasion" />
+              <b-form-input id="occasion" v-model="form.occasion" required/>
             </b-form-group>
           </b-col>
         </b-row>
         <b-form-group label="Story" label-for="story">
-          <b-form-textarea id="story" v-model="form.story" rows="3" />
+          <b-form-textarea id="story" v-model="form.story" rows="3" required/>
         </b-form-group>
       </div>
 

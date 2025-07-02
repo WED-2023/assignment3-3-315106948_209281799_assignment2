@@ -8,7 +8,7 @@
           <!-- Title and image -->
           <div class="text-center mb-4">
             <h1 class="title">{{ recipe.title }}</h1>
-            <img :src="recipe.image" class="img-fluid my-3 rounded" alt="Recipe image" />
+            <img :src="recipe.image" class="img-fluid my-3 rounded fixed-recipe-image" alt="Recipe image" />
           </div>
 
         <!-- Prepare & Meal-Plan Buttons -->
@@ -90,6 +90,12 @@ async function addToMealPlan() {
 .img-fluid {
   max-width: 100%;
   height: auto;
+}
+.fixed-recipe-image {
+  width: 60%;
+  height: auto;
+  max-height: 250px;
+  object-fit: cover;
 }
 
 </style>
