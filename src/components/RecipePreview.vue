@@ -28,12 +28,6 @@
         <h5 class="card-title">{{ recipe.title }}</h5>
       </router-link>
 
-      <!-- <img
-        v-if="recipe.image"
-        :src="recipe.image"
-        class="card-img-top recipe-image"
-        alt="Recipe image"
-      /> -->
 
     <!-- <div class="card-body text-center">
       <h5 class="card-title">{{ recipe.title }}</h5> -->
@@ -106,6 +100,8 @@ export default {
 
 <style scoped>
 .card {
+  max-width: 250px;
+  margin: 0 auto; 
   border-radius: 0.75rem;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   transition: transform 0.2s;
