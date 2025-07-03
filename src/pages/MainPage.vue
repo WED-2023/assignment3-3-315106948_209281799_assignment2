@@ -34,6 +34,7 @@
             title="Last Viewed Recipes"
             :recipes="lastViewedRecipes"
             class="RandomRecipes center"
+            
           />
         </div>
       </b-col>
@@ -89,6 +90,15 @@ export default {
 };
 </script>
 
+<style scoped>
+.recipe-list {
+  width: 100%;
+}
+.card {
+  width: 1100px;
+  margin: 0 auto;
+}
 
+</style>
 
 

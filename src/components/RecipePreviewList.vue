@@ -63,9 +63,11 @@ export default {
 <style scoped>
 
 .recipe-list {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 1.5rem;
 }
+
 
 
 .recipe-list.grid {
@@ -105,5 +107,9 @@ export default {
   margin-top: 1.5rem;
   margin-bottom: 0.5rem;
 }
+/* .card {
+  width: 100%;
+  max-width: 500px;
+} */
 
 </style>

@@ -100,7 +100,8 @@ export default {
 
 <style scoped>
 .card {
-  max-width: 250px;
+  /* max-width: 400px; */
+  width: 90%;
   margin: 0 auto; 
   border-radius: 0.75rem;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);

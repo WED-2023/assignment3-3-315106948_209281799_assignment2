@@ -2,7 +2,7 @@
 <template>
   <div class="container mt-4">
     <b-row class="justify-content-center">
-      <b-col cols="12" sm="10" md="10" lg="8">
+      <b-col cols="12" md="8" lg="7">
         <div class="fixed-card-wrapper">
           <b-card class="transparent-card p-4" v-if="recipe">
             <div class="text-center mb-4">
@@ -87,18 +87,9 @@ async function addToMealPlan() {
   height: auto;
 }
 .fixed-recipe-image {
-  width: 100%;
+  width: 400px;
   height: auto;
-  max-height: 250px;
+  max-height: 300px;
   object-fit: cover;
 }
-
-.transparent-card {
-  border-radius: 0.75rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(6px);
-}
-
-
 </style>
